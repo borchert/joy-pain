@@ -74,7 +74,7 @@
 	var map = L.mapbox.map('map', 'jtreinke.l8090480')
 	.setView([45, -93.00], 12);</script> -->
 	<script>
-      var map, joy_toolbar, pain_toolbar, symbol, geomTask;
+      var map, joy_toolbar, pain_toolbar, symbol, geomTask, drawing;
 
       require([
         "esri/map", 
@@ -144,14 +144,32 @@
           joy_toolbar = new Draw(map);
           pain_toolbar = new Draw(map);
           edit_toolbar = new Edit(map);
-          map.graphics.on("click", function(e){
-            edit_toolbar.activate(Edit.MOVE, e.graphic);
+          
+          var edit_listener = map.graphics.on("click", function(e){
+            if (!drawing) {
+              edit_toolbar.activate(Edit.MOVE, e.graphic);
+            }
           });
+
+          joy_toolbar.on("activate", function(e){
+            console.log("joy: draw starting");
+            drawing = true;
+          });
+          pain_toolbar.on("activate", function(e){
+            console.log("pain: draw starting");
+            drawing = true;
+          });
+
           joy_toolbar.on("draw-end", function(e){
+            console.log("joy: done drawing");
+            drawing = false;
             addToMap(e,"joy");
-          }
-          );
-          pain_toolbar.on("draw-end", addToMap);
+          });
+          pain_toolbar.on("draw-end", function(e){
+            console.log("pain: done drawing");
+            drawing = false;
+            addToMap(e,"pain")
+          });
         }
 
         function addToMap(evt,joy_or_pain) {

@@ -59,6 +59,10 @@
         <button data-tool-name="CIRCLE" data-dojo-type="dijit/form/Button">Circle</button>
         <button data-tool-name="ELLIPSE" data-dojo-type="dijit/form/Button">Ellipse</button>
       </div>
+      <span>Edit</span>
+      <div id="editing" data-dojo-type="dijit/layout/ContentPane">
+        <button data-tool-name="MOVE" data-dojo-type="dijit/form/Button">Move</button>
+      </div>
     </div>
     <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
   </div>
@@ -76,6 +80,7 @@
         "esri/map", 
 		    "esri/layers/WebTiledLayer",
         "esri/toolbars/draw",
+        "esri/toolbars/edit",
         "esri/graphic",
         "esri/symbols/SimpleMarkerSymbol",
         "esri/symbols/SimpleLineSymbol",
@@ -88,7 +93,8 @@
       ], function(
         Map,
 		WebTiledLayer,
-		Draw, 
+		Draw,
+    Edit, 
 		Graphic, 
         SimpleMarkerSymbol, 
 		SimpleLineSymbol, 
@@ -105,7 +111,7 @@
 		  zoom: 12
         });
 		
-		map.on("load", createToolbar);
+		map.on("load", createToolbars);
         map.addLayer(pencilMap);
 		
   
@@ -126,16 +132,21 @@
           if (joy_pain === "joy"){
             joy_toolbar.activate(Draw[tool]);
           }
-          else {
+          else if (joy_pain === "pain"){
             pain_toolbar.activate(Draw[tool]);
           }
+         
           
           map.hideZoomSlider();
         }
 
-        function createToolbar() {
+        function createToolbars() {
           joy_toolbar = new Draw(map);
           pain_toolbar = new Draw(map);
+          edit_toolbar = new Edit(map);
+          map.graphics.on("click", function(e){
+            edit_toolbar.activate(Edit.MOVE, e.graphic);
+          });
           joy_toolbar.on("draw-end", function(e){
             addToMap(e,"joy");
           }
@@ -154,9 +165,6 @@
           }
           
           map.showZoomSlider();
-
-
-
 
           switch (evt.geometry.type) {
             case "point":
@@ -208,6 +216,7 @@
               break;
           }
           var graphic = new Graphic(evt.geometry, symbol);
+   
           map.graphics.add(graphic);
         }
 		

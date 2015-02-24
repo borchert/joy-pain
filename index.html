@@ -31,32 +31,34 @@
   <div id="mainWindow" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline'">
     <div id="header" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
       <span>Draw Joy:<br /></span>
-      <button data-dojo-type="dijit/form/Button">Joy Point</button>
-      <button data-dojo-type="dijit/form/Button">Joy Multi Point</button>
-      <button data-dojo-type="dijit/form/Button">Joy Line</button>
-      <button data-dojo-type="dijit/form/Button">Joy Polyline</button>
-      <button data-dojo-type="dijit/form/Button">Joy Polygon</button>
-      <button data-dojo-type="dijit/form/Button">Joy Freehand Polyline</button>
-      <button data-dojo-type="dijit/form/Button">Joy Freehand Polygon</button>
-      <!--The Arrow,Triangle,Circle and Ellipse types all draw with the polygon symbol-->
-      <button data-dojo-type="dijit/form/Button">Joy Arrow</button>
-      <button data-dojo-type="dijit/form/Button">Joy Triangle</button>
-      <button data-dojo-type="dijit/form/Button">Joy Circle</button>
-      <button data-dojo-type="dijit/form/Button">Joy Ellipse</button>
-
+      <div id="joy" data-dojo-type="dijit/layout/ContentPane">
+        <button data-tool-name="POINT" data-dojo-type="dijit/form/Button">Point</button>
+        <button data-tool-name="MULTIPOINT" data-dojo-type="dijit/form/Button">Multi Point</button>
+        <button data-tool-name="LINE" data-dojo-type="dijit/form/Button">Line</button>
+        <button data-tool-name="POLYLINE" data-dojo-type="dijit/form/Button">Polyline</button>
+        <button data-tool-name="POLYGON" data-dojo-type="dijit/form/Button">Polygon</button>
+        <button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Freehand Polyline</button>
+        <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Freehand Polygon</button>
+        <button data-tool-name="ARROW" data-dojo-type="dijit/form/Button">Arrow</button>
+        <button data-tool-name="TRIANGLE" data-dojo-type="dijit/form/Button">Triangle</button>
+        <button data-tool-name="CIRCLE" data-dojo-type="dijit/form/Button">Circle</button>
+        <button data-tool-name="ELLIPSE" data-dojo-type="dijit/form/Button">Ellipse</button>
+      </div>
       <span>Draw Pain:<br /></span>
-      <button data-dojo-type="dijit/form/Button">Pain Point</button>
-      <button data-dojo-type="dijit/form/Button">Pain Multi Point</button>
-      <button data-dojo-type="dijit/form/Button">Pain Line</button>
-      <button data-dojo-type="dijit/form/Button">Pain Polyline</button>
-      <button data-dojo-type="dijit/form/Button">Pain Polygon</button>
-      <button data-dojo-type="dijit/form/Button">Pain Freehand Polyline</button>
-      <button data-dojo-type="dijit/form/Button">Pain Freehand Polygon</button>
-      <!--The Arrow,Triangle,Circle and Ellipse types all draw with the polygon symbol-->
-      <button data-dojo-type="dijit/form/Button">Pain Arrow</button>
-      <button data-dojo-type="dijit/form/Button">Pain Triangle</button>
-      <button data-dojo-type="dijit/form/Button">Pain Circle</button>
-      <button data-dojo-type="dijit/form/Button">Pain Ellipse</button>
+      <div id="pain" data-dojo-type="dijit/layout/ContentPane">
+        <button data-tool-name="POINT" data-dojo-type="dijit/form/Button">Point</button>
+        <button data-tool-name="MULTIPOINT" data-dojo-type="dijit/form/Button">Multi Point</button>
+        <button data-tool-name="LINE" data-dojo-type="dijit/form/Button">Line</button>
+        <button data-tool-name="POLYLINE" data-dojo-type="dijit/form/Button">Polyline</button>
+        <button data-tool-name="POLYGON" data-dojo-type="dijit/form/Button">Polygon</button>
+        <button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Freehand Polyline</button>
+        <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Freehand Polygon</button>
+        
+        <button data-tool-name="ARROW" data-dojo-type="dijit/form/Button">Arrow</button>
+        <button data-tool-name="TRIANGLE" data-dojo-type="dijit/form/Button">Triangle</button>
+        <button data-tool-name="CIRCLE" data-dojo-type="dijit/form/Button">Circle</button>
+        <button data-tool-name="ELLIPSE" data-dojo-type="dijit/form/Button">Ellipse</button>
+      </div>
     </div>
     <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
   </div>
@@ -119,12 +121,13 @@
         });
 
         function activateTool() {
-          var tool = this.label.toUpperCase().replace(/ /g, "|");
-          if (tool.split("|")[0] === "JOY"){
-            joy_toolbar.activate(Draw[tool.split("|")[1]]);
+          var tool = this.get("data-tool-name");
+          var joy_pain = this.getParent().get("id");
+          if (joy_pain === "joy"){
+            joy_toolbar.activate(Draw[tool]);
           }
           else {
-            pain_toolbar.activate(Draw[tool.split("|")[1]])
+            pain_toolbar.activate(Draw[tool]);
           }
           
           map.hideZoomSlider();
@@ -133,33 +136,75 @@
         function createToolbar() {
           joy_toolbar = new Draw(map);
           pain_toolbar = new Draw(map);
-          joy_toolbar.on("draw-end", addToMap("joy"));
-          pain_toolbar.on("draw-end", addToMap("pain"));
+          joy_toolbar.on("draw-end", function(e){
+            addToMap(e,"joy");
+          }
+          );
+          pain_toolbar.on("draw-end", addToMap);
         }
 
         function addToMap(evt,joy_or_pain) {
-          debugger;
           var symbol;
-          joy_toolbar.deactivate();
-          pain_toolbar.deactivate();
+
+          if (joy_or_pain === "joy"){
+            joy_toolbar.deactivate();
+          }
+          else {
+            pain_toolbar.deactivate();
+          }
+          
           map.showZoomSlider();
+
+
+
+
           switch (evt.geometry.type) {
             case "point":
             case "multipoint":
-              symbol =  new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE, 10,
-			    new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,
-				new esri.Color([153,0,0]), 1),
-				new esri.Color([153,0,0,0.25]));
+
+              if (joy_or_pain ==="joy"){
+                symbol =  new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE, 10,
+                  new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,
+                  new esri.Color([153,0,0]), 1),
+                  new esri.Color([153,0,0,0.25]));
+              }
+
+              else {
+                symbol =  new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE, 10,
+                  new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,
+                  new esri.Color([0,153,0]), 1),
+                  new esri.Color([0,153,0,0.25]));
+              }
+              
               break;
+
             case "polyline":
-              symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DASH,
-			    new esri.Color([153,0,0]), 3);
+
+              if (joy_or_pain ==="joy"){
+                symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DASH,
+			            new esri.Color([153,0,0]), 3);
+              } 
+
+              else {
+                symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DASH,
+                  new esri.Color([0,153,0]), 3);
+              }
               break;
+
             default:
-              symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID,
-			    new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DASHDOT,
-				new esri.Color([153,0,0]), 2),
-				new esri.Color([153,0,0,0.25]));
+              if (joy_or_pain ==="joy"){
+                symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID,
+        			    new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DASHDOT,
+        				  new esri.Color([153,0,0]), 2),
+        				  new esri.Color([153,0,0,0.25]));
+              } 
+
+              else {
+                symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID,
+                  new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DASHDOT,
+                  new esri.Color([0,153,0]), 2),
+                  new esri.Color([0,153,0,0.25]));
+              }
               break;
           }
           var graphic = new Graphic(evt.geometry, symbol);

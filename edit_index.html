@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <head>
+   <meta charset="UTF-8">
+	<link rel="styesheet" href="default.css"/>
+	<title>Joy & Pain Map</title>
+	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+	<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+	<link rel="stylesheet" href="http://js.arcgis.com/3.12/esri/css/esri.css">
+	<link rel="stylesheet" href="http://js.arcgis.com/3.12/dijit/themes/nihilo/nihilo.css">
+    <style>
+      html, body, #mainWindow {
+        font-family: sans-serif; 
+        height: 100%; 
+        width: 100%; 
+      }
+      html, body {
+        margin: 0; 
+        padding: 0;
+      }
+      #header {
+        height: 80px; 
+        overflow: auto;
+        padding: 0.5em;
+      }
+    </style>
+    
+  </head>
+  <body class="nihilo">
+
+  <div id="mainWindow" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline'">
+    <div id="header" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
+      <div id="chooseJoyPain" data-dojo-type="dijit/layout/ContentPane">
+		<button data-tool-name=" " data-dojo-type="dijit/form/Button">Choose Joy</button>
+		<button data-tool-name=" " data-dojo-type="dijit/form/Button">Choose Pain</button>
+	  </div>
+      <div id="joy" data-dojo-type="dijit/layout/ContentPane">
+        <button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Draw a Line</button>
+        <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Create a Shape</button>
+        <button data-tool-name="POINT" data-dojo-type="dijit/form/Button">Place a Circle</button>
+      </div>
+	  <div id="pain" data-dojo-type="dijit/layout/ContentPane">
+		<button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Draw a Line</button>
+        <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Create a Shape</button>
+        <button data-tool-name="POINT" data-dojo-type="dijit/form/Button">Place a Circle</button>
+	  </div>
+      <span>Edit</span>
+      <div id="editing" data-dojo-type="dijit/layout/ContentPane">
+        <button data-tool-name="MOVE" data-dojo-type="dijit/form/Button">Move</button>
+      </div>
+    </div>
+    <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
+  </div>
+	
+	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
+	<script src="http://js.arcgis.com/3.12/"></script>
+	<!--<script type="text/javascript" src="joypain.js"></script>-->
+	<!-- <script>L.mapbox.accessToken = 'pk.eyJ1IjoianRyZWlua2UiLCJhIjoiaHF3VDZDMCJ9.vcDB3i-OmaAFJvOfpD6M_Q';
+	var map = L.mapbox.map('map', 'jtreinke.l8090480')
+	.setView([45, -93.00], 12);</script> -->
+	<script>
+      var map, joy_toolbar, pain_toolbar, symbol, geomTask, drawing;
+
+      require([
+        "esri/map", 
+		    "esri/layers/WebTiledLayer",
+        "esri/toolbars/draw",
+        "esri/toolbars/edit",
+        "esri/graphic",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleFillSymbol",
+
+        "dojo/parser", "dijit/registry",
+
+        "dijit/layout/BorderContainer", "dijit/layout/ContentPane", 
+        "dijit/form/Button", "dijit/WidgetSet", "dojo/domReady!"
+      ], function(
+        Map,
+		WebTiledLayer,
+		Draw,
+    Edit, 
+		Graphic, 
+        SimpleMarkerSymbol, 
+		SimpleLineSymbol, 
+		SimpleFillSymbol,
+        parser, 
+		registry
+      ) {
+        parser.parse();
+		
+		//var pencilMap = new WebTiledLayer("http://api.tiles.mapbox.com/v4/jtreinke.l8090480/${level}/${col}/${row}.png?access_token=pk.eyJ1IjoianRyZWlua2UiLCJhIjoiaHF3VDZDMCJ9.vcDB3i-OmaAFJvOfpD6M_Q");
+		
+		var pencilMap = new WebTiledLayer("https://api.tiles.mapbox.com/v4/mmcfarlane83.ba1f3e84/${level}/${col}/${row}.png?access_token=pk.eyJ1IjoibW1jZmFybGFuZTgzIiwiYSI6InNQb1ZRQ0UifQ.WkcsZoP_C7A9i1FK7ScKUg#15/44.9683/-93.2567")
+		
+        map = new Map("map", {
+          center: [-93.17, 44.96],
+		  zoom: 12
+        });
+		
+		map.on("load", createToolbars);
+        map.addLayer(pencilMap);
+		
+  
+
+        // loop through all dijits, connect onClick event
+        // listeners for buttons to activate drawing tools
+        registry.forEach(function(d) {
+          // d is a reference to a dijit
+          // could be a layout container or a button
+          if ( d.declaredClass === "dijit.form.Button" ) {
+            d.on("click", activateTool);
+          }
+        });
+
+        function activateTool() {
+          var tool = this.get("data-tool-name");
+          var joy_pain = this.getParent().get("id");
+		  //trial switch statement
+		  switch(joy_pain) {
+			case 'joy':
+				joy_toolbar.activate(Draw[tool]);
+				break;
+			case 'pain':
+				pain_toolbar.activate(Draw[tool]);
+				break;
+		  }  
+          map.hideZoomSlider();
+        }
+
+        function createToolbars() {
+          //deleted one toolbar, renamed the other "draw_toolbar"
+          joy_toolbar = new Draw(map);
+		  pain_toolbar = new Draw(map);
+          edit_toolbar = new Edit(map);
+          
+          var edit_listener = map.graphics.on("click", function(e){
+            if (!drawing) {
+              edit_toolbar.activate(Edit.MOVE, e.graphic);
+            }
+          });
+
+          joy_toolbar.on("activate", function(e){
+            console.log("joy: draw starting");
+            drawing = true;
+          });
+          pain_toolbar.on("activate", function(e){
+            console.log("pain: draw starting");
+            drawing = true;
+          });
+
+          joy_toolbar.on("draw-end", function(e){
+            console.log("joy: done drawing");
+            drawing = false;
+            addToMap(e,"joy");
+          });
+          pain_toolbar.on("draw-end", function(e){
+            console.log("pain: done drawing");
+            drawing = false;
+            addToMap(e,"pain")
+          });
+        }
+
+        function addToMap(evt,joy_or_pain) {
+          var symbol;
+
+          if (joy_or_pain === "joy"){
+            joy_toolbar.deactivate();
+          }
+          else {
+            pain_toolbar.deactivate();
+          }
+          
+          map.showZoomSlider();
+
+          switch (evt.geometry.type) {
+            case "point":
+
+              if (joy_or_pain ==="joy"){
+                symbol =  new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE, 10,
+                  new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,
+                  new esri.Color([200,192,0]), 1),
+                  new esri.Color([200,192,0,0.25]));
+              }
+
+              else {
+                symbol =  new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE, 10,
+                  new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,
+                  new esri.Color([0,0,0]), 1),
+                  new esri.Color([0,0,0,0.25]));
+              }
+              
+              break;
+
+            case "polyline":
+
+              if (joy_or_pain ==="joy"){
+                symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DOT,
+			            new esri.Color([200,192,0]), 3);
+              } 
+
+              else {
+                symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DOT,
+                  new esri.Color([0,0,0]), 3);
+              }
+              break;
+
+            default:
+              if (joy_or_pain ==="joy"){
+                symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID,
+        			    new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DOT,
+        				  new esri.Color([200,192,0]), 2),
+        				  new esri.Color([200,192,0,0.25]));
+              } 
+
+              else {
+                symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID,
+                  new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DOT,
+                  new esri.Color([0,0,0]), 2),
+                  new esri.Color([0,0,0,0.25]));
+              }
+              break;
+          }
+          var graphic = new Graphic(evt.geometry, symbol);
+   
+          map.graphics.add(graphic);
+        }
+		
+
+      });
+    </script>
+	
+  </body>
+</html>

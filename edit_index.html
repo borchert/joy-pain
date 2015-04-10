@@ -3,6 +3,8 @@
   <head>
    <meta charset="UTF-8">
 	<link rel="styesheet" href="default.css"/>
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="translucent-black">
 	<title>Joy & Pain Map</title>
 	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 	<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
@@ -23,6 +25,12 @@
         overflow: auto;
         padding: 0.5em;
       }
+	  #LocateButton {
+      position: absolute;
+      top: 95px;
+      left: 20px;
+      z-index: 50;
+    }
     </style>
     
   </head>
@@ -49,7 +57,9 @@
         <button data-tool-name="MOVE" data-dojo-type="dijit/form/Button">Move</button>
       </div>
     </div>
-    <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
+    <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
+	  <div id="LocateButton"></div>
+	</div>
   </div>
 	
 	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
@@ -70,7 +80,7 @@
         "esri/symbols/SimpleMarkerSymbol",
         "esri/symbols/SimpleLineSymbol",
         "esri/symbols/SimpleFillSymbol",
-
+		"esri/dijit/LocateButton",
         "dojo/parser", "dijit/registry",
 
         "dijit/layout/BorderContainer", "dijit/layout/ContentPane", 
@@ -84,6 +94,7 @@
         SimpleMarkerSymbol, 
 		SimpleLineSymbol, 
 		SimpleFillSymbol,
+		LocateButton,
         parser, 
 		registry
       ) {
@@ -97,6 +108,11 @@
           center: [-93.17, 44.96],
 		  zoom: 12
         });
+		
+		geoLocate = new LocateButton({
+		  map: map
+		}, "LocateButton");
+		geoLocate.startup();
 		
 		map.on("load", createToolbars);
         map.addLayer(pencilMap);
@@ -177,14 +193,14 @@
             case "point":
 
               if (joy_or_pain ==="joy"){
-                symbol =  new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE, 10,
+                symbol =  new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE, 15,
                   new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,
-                  new esri.Color([200,192,0]), 1),
-                  new esri.Color([200,192,0,0.25]));
+                  new esri.Color([177,137,4]), 1),
+                  new esri.Color([177,137,4,0.25]));
               }
 
               else {
-                symbol =  new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE, 10,
+                symbol =  new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE, 15,
                   new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,
                   new esri.Color([0,0,0]), 1),
                   new esri.Color([0,0,0,0.25]));
@@ -196,7 +212,7 @@
 
               if (joy_or_pain ==="joy"){
                 symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DOT,
-			            new esri.Color([200,192,0]), 3);
+			            new esri.Color([177,137,4]), 3);
               } 
 
               else {
@@ -209,8 +225,8 @@
               if (joy_or_pain ==="joy"){
                 symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID,
         			    new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DOT,
-        				  new esri.Color([200,192,0]), 2),
-        				  new esri.Color([200,192,0,0.25]));
+        				  new esri.Color([177,137,4]), 2),
+        				  new esri.Color([177,137,4,0.25]));
               } 
 
               else {

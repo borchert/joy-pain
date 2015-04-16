@@ -31,6 +31,26 @@
       left: 20px;
       z-index: 50;
     }
+	
+	
+	.color1 .mblSwitchBgLeft {
+  background: -webkit-gradient(linear, left top, left bottom,
+                               from(#28B159), to(#75FBAC),
+                               color-stop(0.5, #3FEB84),
+                               color-stop(0.5, #4CEE8E));
+}
+.color1 .mblSwitchBgRight {
+  background: -webkit-gradient(linear, left top, left bottom,
+                               from(#CECECE), to(#FDFDFD),
+                               color-stop(0.5, #EEEEEE),
+                               color-stop(0.5, #F8F8F8));
+}
+.color1 .mblSwitchKnob {
+  background: -webkit-gradient(linear, left top, left bottom,
+                               from(#999999), to(#FAFAFA),
+                               color-stop(0.5, #BBBBBB),
+                               color-stop(0.5, #CACACA));
+}
     </style>
     
   </head>
@@ -39,9 +59,21 @@
   <div id="mainWindow" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline'">
     <div id="header" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
       <div id="chooseJoyPain" data-dojo-type="dijit/layout/ContentPane">
-		<button data-tool-name=" " data-dojo-type="dijit/form/Button">Choose Joy</button>
-		<button data-tool-name=" " data-dojo-type="dijit/form/Button">Choose Pain</button>
+		<button data-dojo-type="dijit/form/ToggleButton" data-dojo-props="iconClass:'dijitCheckBoxIcon', checked: true">
+			Toggle me
+		</button>
+		<div id="sw" class="color1 mblSwRoundShape1" data-dojo-type="dojox/mobile/Switch" value="on" rightLabel="Joy" leftLabel="Pain" ></div>
 	  </div>
+	  <div id="horizontalSlider" style="width:100px;" name="horizontalSlider" data-dojo-type="dijit/form/HorizontalSlider" data-dojo-props="value:1, minimum: 0, maximum:1,
+		discreteValues:2, intermediateChanges:false, showButtons:true">
+    <div data-dojo-type="dijit/form/HorizontalRule" container="bottomDecoration"
+        style="height:5px;"></div>
+    <ol data-dojo-type="dijit/form/HorizontalRuleLabels" container="bottomDecoration"
+        style="height:1em;font-size:75%;color:gray;">
+        <li>PAIN</li>
+        <li>JOY</li>
+    </ol>
+</div>
       <div id="joy" data-dojo-type="dijit/layout/ContentPane">
         <button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Draw a Line</button>
         <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Create a Shape</button>
@@ -82,8 +114,13 @@
         "esri/symbols/SimpleFillSymbol",
 		"esri/dijit/LocateButton",
         "dojo/parser", "dijit/registry",
-
+		
         "dijit/layout/BorderContainer", "dijit/layout/ContentPane", 
+		"dijit/form/ToggleButton",
+		"dojox/mobile/Switch",
+		"dijit/form/HorizontalSlider",
+		"dijit/form/HorizontalRule",
+		"dijit/form/HorizontalRuleLabels",
         "dijit/form/Button", "dijit/WidgetSet", "dojo/domReady!"
       ], function(
         Map,
@@ -211,12 +248,12 @@
             case "polyline":
 
               if (joy_or_pain ==="joy"){
-                symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DOT,
+                symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SHORTDOT,
 			            new esri.Color([177,137,4]), 3);
               } 
 
               else {
-                symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DOT,
+                symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SHORTDOT,
                   new esri.Color([0,0,0]), 3);
               }
               break;
@@ -224,14 +261,14 @@
             default:
               if (joy_or_pain ==="joy"){
                 symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID,
-        			    new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DOT,
+        			    new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SHORTDOT,
         				  new esri.Color([177,137,4]), 2),
         				  new esri.Color([177,137,4,0.25]));
               } 
 
               else {
                 symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID,
-                  new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DOT,
+                  new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SHORTDOT,
                   new esri.Color([0,0,0]), 2),
                   new esri.Color([0,0,0,0.25]));
               }

@@ -31,25 +31,29 @@
       left: 20px;
       z-index: 50;
     }
-	
-	
-	.color1 .mblSwitchBgLeft {
-  background: -webkit-gradient(linear, left top, left bottom,
-                               from(#28B159), to(#75FBAC),
-                               color-stop(0.5, #3FEB84),
-                               color-stop(0.5, #4CEE8E));
+	  #joy-pain-toggle-div {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 50;
+    }
+    
+    #draw-tools-div span{
+        display:block;
+        padding: 1px 2px;
+    }
+
+.nihilo .dijitToggleButton .dijitButtonText{
+    padding:4px 8px;
 }
-.color1 .mblSwitchBgRight {
-  background: -webkit-gradient(linear, left top, left bottom,
-                               from(#CECECE), to(#FDFDFD),
-                               color-stop(0.5, #EEEEEE),
-                               color-stop(0.5, #F8F8F8));
+
+.nihilo .dijitToggleButton span {
+    border-radius: 50px;
+    background-color:#545454;
+    color:white;
 }
-.color1 .mblSwitchKnob {
-  background: -webkit-gradient(linear, left top, left bottom,
-                               from(#999999), to(#FAFAFA),
-                               color-stop(0.5, #BBBBBB),
-                               color-stop(0.5, #CACACA));
+.nihilo .dijitToggleButton.dijitChecked span {
+    background-color:#b18904;
 }
     </style>
     
@@ -57,40 +61,18 @@
   <body class="nihilo">
 
   <div id="mainWindow" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline'">
-    <div id="header" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
-      <div id="chooseJoyPain" data-dojo-type="dijit/layout/ContentPane">
-		<button data-dojo-type="dijit/form/ToggleButton" data-dojo-props="iconClass:'dijitCheckBoxIcon', checked: true">
-			Toggle me
-		</button>
-		<div id="sw" class="color1 mblSwRoundShape1" data-dojo-type="dojox/mobile/Switch" value="on" rightLabel="Joy" leftLabel="Pain" ></div>
-	  </div>
-	  <div id="horizontalSlider" style="width:100px;" name="horizontalSlider" data-dojo-type="dijit/form/HorizontalSlider" data-dojo-props="value:1, minimum: 0, maximum:1,
-		discreteValues:2, intermediateChanges:false, showButtons:true">
-    <div data-dojo-type="dijit/form/HorizontalRule" container="bottomDecoration"
-        style="height:5px;"></div>
-    <ol data-dojo-type="dijit/form/HorizontalRuleLabels" container="bottomDecoration"
-        style="height:1em;font-size:75%;color:gray;">
-        <li>PAIN</li>
-        <li>JOY</li>
-    </ol>
-</div>
-      <div id="joy" data-dojo-type="dijit/layout/ContentPane">
-        <button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Draw a Line</button>
-        <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Create a Shape</button>
-        <button data-tool-name="POINT" data-dojo-type="dijit/form/Button">Place a Circle</button>
-      </div>
-	  <div id="pain" data-dojo-type="dijit/layout/ContentPane">
-		<button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Draw a Line</button>
-        <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Create a Shape</button>
-        <button data-tool-name="POINT" data-dojo-type="dijit/form/Button">Place a Circle</button>
-	  </div>
-      <span>Edit</span>
-      <div id="editing" data-dojo-type="dijit/layout/ContentPane">
-        <button data-tool-name="MOVE" data-dojo-type="dijit/form/Button">Move</button>
-      </div>
-    </div>
     <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
-	  <div id="LocateButton"></div>
+        <div id="LocateButton"></div>
+        <div id="joy-pain-toggle-div">
+            <button data-dojo-type="dijit/form/ToggleButton" data-dojo-props="id:'joy-pain-toggle',onChange:function(val){if (val === false){this.set('label','PAIN')} else {this.set('label', 'JOY')}}, checked: true">
+                JOY
+            </button>
+          <div id='draw-tools-div' data-dojo-type="dijit/layout/ContentPane">
+            <button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Draw a Line</button>
+            <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Create a Shape</button>
+            <button data-tool-name="POINT" data-dojo-type="dijit/form/Button">Place a Circle</button>
+          </div>
+        </div>
 	</div>
   </div>
 	
@@ -168,13 +150,14 @@
 
         function activateTool() {
           var tool = this.get("data-tool-name");
-          var joy_pain = this.getParent().get("id");
+          var joy_pain_toggle_state = registry.byId("joy-pain-toggle").checked;
+         
 		  //trial switch statement
-		  switch(joy_pain) {
-			case 'joy':
+		  switch(joy_pain_toggle_state) {
+			case true:
 				joy_toolbar.activate(Draw[tool]);
 				break;
-			case 'pain':
+			case false:
 				pain_toolbar.activate(Draw[tool]);
 				break;
 		  }  

@@ -177,7 +177,6 @@
 		map.on("load", createToolbars);
         map.addLayer(pencilMap);
 		
-=======
 
 
         if (!window.localStorage.getItem("joy-pain-stored")){
@@ -188,13 +187,10 @@
 
             for (i=0; i< graphics_from_storage.length; i++){
                 map.graphics.add(new Graphic(graphics_from_storage[i]));
-        }
+            }
         }
        
         
-        
->>>>>>> master
-  
 
         // loop through all dijits, connect onClick event
         // listeners for buttons to activate drawing tools

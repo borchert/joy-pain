@@ -10,9 +10,11 @@
 	<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
 	<link rel="stylesheet" href="http://js.arcgis.com/3.12/esri/css/esri.css">
 	<link rel="stylesheet" href="http://js.arcgis.com/3.12/dijit/themes/nihilo/nihilo.css">
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
     <style>
       html, body, #mainWindow {
-        font-family: sans-serif; 
+        font-family: 'Source Sans Pro', sans-serif;
+          color: #4C4C4C;
         height: 100%; 
         width: 100%; 
       }
@@ -28,31 +30,69 @@
 	  #LocateButton {
       position: absolute;
       top: 95px;
-      left: 20px;
-      z-index: 50;
-    }
+      left: 25px;
+      z-index: 50; 
+      }
+
+      /* override default locate button styling */
+      #LocateButton .locateContainer .zoomLocateButton {
+        padding:0px;
+        transition: background-color 0.5s ease;
+        background-color: rgba(255, 255, 255, 1);
+        background-image: url("/img/locate.png");
+        border: 1px solid #57585A;
+      }
+      #LocateButton .locateContainer .zoomLocateButton:hover {
+        transition: background-color 0.5s ease;
+        background-color: #eee;
+      }
+
 	  #joy-pain-toggle-div {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      z-index: 50;
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          z-index: 50;
+    }
+    #draw-tools-div .dijitButton:hover span, #draw-tools-div .dijitButtonFocused span  {
+        transition: background-color 0.5s ease;
+        background-color: #eee;
     }
     
-    #draw-tools-div span{
+    #draw-tools-div span {
         display:block;
-        padding: 1px 2px;
     }
+    #draw-tools-div .dijitButton span {
+        transition: background-color 0.5s ease;
+        background-color: rgba(255, 255, 255, 1);
 
-.nihilo .dijitToggleButton .dijitButtonText{
+    }
+    #draw-tools-div .dijitButtonNode {
+        
+        border: 1px solid #57585A;
+        padding: 1px 2px;
+        
+    }
+        
+  
+
+#joy-pain-toggle-div .dijitToggleButton .dijitButtonText{
     padding:4px 8px;
 }
 
-.nihilo .dijitToggleButton span {
+#joy-pain-toggle-div .dijitToggleButton, #joy-pain-toggle-div .dijitToggleButton > span {
+    width:95%;
+}
+
+#joy-pain-toggle-div .dijitToggleButton span {
     border-radius: 50px;
+    transition: background-color 1s ease,
+                width 1s ease;
     background-color:#545454;
     color:white;
 }
-.nihilo .dijitToggleButton.dijitChecked span {
+#joy-pain-toggle-div .dijitToggleButton.dijitChecked span {
+    transition: background-color 1s ease,
+                width 1s ease;
     background-color:#b18904;
 }
     </style>
@@ -64,7 +104,7 @@
     <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
         <div id="LocateButton"></div>
         <div id="joy-pain-toggle-div">
-            <button data-dojo-type="dijit/form/ToggleButton" data-dojo-props="id:'joy-pain-toggle',onChange:function(val){if (val === false){this.set('label','PAIN')} else {this.set('label', 'JOY')}}, checked: true">
+            <button id='joy-pain-toggle-button' data-dojo-type="dijit/form/ToggleButton" data-dojo-props="id:'joy-pain-toggle',onChange:function(val){if (val === false){this.set('label','PAIN')} else {this.set('label', 'JOY')}}, checked: true">
                 JOY
             </button>
           <div id='draw-tools-div' data-dojo-type="dijit/layout/ContentPane">
@@ -118,7 +158,7 @@
 		registry
       ) {
         parser.parse();
-		
+		var graphics_from_storage;
 		var pencilMap = new WebTiledLayer("http://api.tiles.mapbox.com/v4/mmcfarlane83.lm01cdj5/${level}/${col}/${row}.png?access_token=pk.eyJ1IjoianRyZWlua2UiLCJhIjoiaHF3VDZDMCJ9.vcDB3i-OmaAFJvOfpD6M_Q");
 		
 		//var pencilMap = new WebTiledLayer("https://api.tiles.mapbox.com/v4/mmcfarlane83.lm01cdj5/${level}/${col}/${row}.png?access_token=pk.eyJ1IjoibW1jZmFybGFuZTgzIiwiYSI6InNQb1ZRQ0UifQ.WkcsZoP_C7A9i1FK7ScKUg#15/44.9683/-93.2567")//
@@ -127,6 +167,7 @@
           center: [-93.17, 44.96],
 		  zoom: 12
         });
+
 		
 		geoLocate = new LocateButton({
 		  map: map
@@ -135,7 +176,21 @@
 		
 		map.on("load", createToolbars);
         map.addLayer(pencilMap);
-		
+
+
+        if (!window.localStorage.getItem("joy-pain-stored")){
+            window.localStorage.setItem("joy-pain-stored", "[]");
+        }
+        else {
+             graphics_from_storage = JSON.parse(window.localStorage.getItem("joy-pain-stored"));
+
+            for (i=0; i< graphics_from_storage.length; i++){
+                map.graphics.add(new Graphic(graphics_from_storage[i]));
+        }
+        }
+       
+        
+        
   
 
         // loop through all dijits, connect onClick event
@@ -260,6 +315,11 @@
           var graphic = new Graphic(evt.geometry, symbol);
    
           map.graphics.add(graphic);
+          var number_graphics = map.graphics.graphics.length;
+          var graphics_json = JSON.parse(window.localStorage.getItem("joy-pain-stored"));
+          graphics_json.push(graphic.toJson());
+          
+          window.localStorage.setItem("joy-pain-stored",JSON.stringify(graphics_json));
         }
 		
 

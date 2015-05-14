@@ -1,0 +1,91 @@
+#map {
+width:500px;
+height:500px;
+}
+
+
+html, body, #mainWindow {
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #4C4C4C;
+    height: 100%; 
+    width: 100%; 
+}
+
+html, body {
+    margin: 0; 
+    padding: 0;
+}
+
+#header {
+    height: 80px; 
+    overflow: auto;
+    padding: 0.5em;
+}
+#LocateButton {
+position: absolute;
+top: 95px;
+left: 25px;
+z-index: 50; 
+}
+
+/* override default locate button styling */
+#LocateButton .locateContainer .zoomLocateButton {
+padding:0px;
+transition: background-color 0.5s ease;
+background-color: rgba(255, 255, 255, 1);
+background-image: url("/img/locate.png");
+border: 1px solid #57585A;
+}
+#LocateButton .locateContainer .zoomLocateButton:hover {
+transition: background-color 0.5s ease;
+background-color: #eee;
+}
+
+#joy-pain-toggle-div {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 50;
+}
+#draw-tools-div .dijitButton:hover span, #draw-tools-div .dijitButtonFocused span  {
+    transition: background-color 0.5s ease;
+    background-color: #eee;
+}
+
+#draw-tools-div span {
+    display:block;
+}
+#draw-tools-div .dijitButton span {
+    transition: background-color 0.5s ease;
+    background-color: rgba(255, 255, 255, 1);
+
+}
+#draw-tools-div .dijitButtonNode {
+    
+    border: 1px solid #57585A;
+    padding: 1px 2px;
+    
+}
+    
+
+
+#joy-pain-toggle-div .dijitToggleButton .dijitButtonText{
+padding:4px 8px;
+}
+
+#joy-pain-toggle-div .dijitToggleButton, #joy-pain-toggle-div .dijitToggleButton > span {
+width:95%;
+}
+
+#joy-pain-toggle-div .dijitToggleButton span {
+border-radius: 50px;
+transition: background-color 1s ease,
+            width 1s ease;
+background-color:#545454;
+color:white;
+}
+#joy-pain-toggle-div .dijitToggleButton.dijitChecked span {
+transition: background-color 1s ease,
+            width 1s ease;
+background-color:#b18904;
+}

@@ -59,12 +59,12 @@ geoLocate.startup();
 map.on("load", createToolbars);
 map.addLayer(pencilMap);
 
-if (!window.sessionStorage.getItem("joy-pain-stored")){
-    window.sessionStorage.setItem("joy-pain-stored", "[]");
+if (!window.localStorage.getItem("joy-pain-stored")){
+    window.localStorage.setItem("joy-pain-stored", "[]");
 }
 
 else {
-     graphics_from_storage = JSON.parse(window.sessionStorage.getItem("joy-pain-stored"));
+     graphics_from_storage = JSON.parse(window.localStorage.getItem("joy-pain-stored"));
 
     for (i=0; i< graphics_from_storage.length; i++){
         map.graphics.add(new Graphic(graphics_from_storage[i]));
@@ -183,7 +183,7 @@ updateSessionStorage = function() {
     for (var i = graphics.length - 1; i >= 0; i--) {
         graphics_json.push(graphics[i].toJson());
     };
-    window.sessionStorage.setItem("joy-pain-stored", JSON.stringify(graphics_json));
+    window.localStorage.setItem("joy-pain-stored", JSON.stringify(graphics_json));
 }
 
 function addToMap(evt,joy_or_pain) {

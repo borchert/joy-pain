@@ -18,7 +18,8 @@
       <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
           <div id="LocateButton"></div>
           <div id="joy-pain-toggle-div">
-            <button id='joy-pain-toggle-button' data-dojo-type="dijit/form/ToggleButton" data-dojo-props="id:'joy-pain-toggle',onChange:function(val){if (val === false){this.set('label','PAIN')} else {this.set('label', 'JOY')}}, checked: true">
+            <button id='joy-pain-toggle-button' data-dojo-type="dijit/form/ToggleButton" 
+              data-dojo-props="id:'joy-pain-toggle', onChange: function(val){toggleJoyPain(val,this);}, checked: true">
                 JOY
             </button>
             <div id='draw-tools-div' data-dojo-type="dijit/layout/ContentPane">
@@ -26,6 +27,10 @@
               <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Create a Shape</button>
               <button data-tool-name="CIRCLE" data-dojo-type="dijit/form/Button">Place a Circle</button>
             </div>
+            <button id="delete-sketch-button" style="visibility:hidden" data-dojo-type="dijit/form/Button"
+                data-dojo-props="onClick:function(){deleteGraphic();}">
+                <span class="fa fa-trash map-icon"></span>
+            </button>
           </div>
         </div>
 	   </div>

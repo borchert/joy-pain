@@ -1,4 +1,5 @@
-  var map, joy_toolbar, pain_toolbar, symbol, geomTask, drawing, graphics_from_storage;
+  var map, joy_toolbar, pain_toolbar, symbol, geomTask, drawing, 
+  graphics_from_storage, showDeleteButton, hideDeleteButton, deleteGraphic, toggleJoyPain, updateSessionStorage;
 
   require([
 
@@ -13,11 +14,14 @@
     "esri/dijit/LocateButton",
     "dojo/parser", 
     "dijit/registry",
+    "dojo/dom",
+    "dojo/dom-style",
     "dijit/layout/BorderContainer", 
     "dijit/layout/ContentPane", 
     "dijit/form/ToggleButton",
     "dijit/form/Button", 
-    "dijit/WidgetSet", 
+    "dijit/WidgetSet",
+    
     "dojo/domReady!"
 
   ], function(
@@ -31,8 +35,9 @@
     SimpleFillSymbol,
     LocateButton,
     parser, 
-    registry
-
+    registry,
+    dom,
+    domStyle
   ) {
 
 parser.parse();
@@ -66,10 +71,6 @@ else {
     }
 }
    
-    
-    
-
-
 // loop through all dijits, connect onClick event
 // listeners for buttons to activate drawing tools
 registry.forEach(function(d) {
@@ -81,29 +82,68 @@ registry.forEach(function(d) {
 });
 
 function activateTool() {
-  var tool = this.get("data-tool-name");
-  var joy_pain_toggle_state = registry.byId("joy-pain-toggle").checked;
+
+    var tool = this.get("data-tool-name");
+    if (!tool){
+        console.log("bailin'");
+        return;
+    }
+
+    var joy_pain_toggle_state = registry.byId("joy-pain-toggle").checked;
  
-//trial switch statement
-switch(joy_pain_toggle_state) {
-case true:
-joy_toolbar.activate(Draw[tool]);
-break;
-case false:
-pain_toolbar.activate(Draw[tool]);
-break;
-}  
+    //trial switch statement
+    switch(joy_pain_toggle_state) {
+        
+        case true:
+            joy_toolbar.activate(Draw[tool]);
+        break;
+        
+        case false:
+            pain_toolbar.activate(Draw[tool]);
+        break;
+    }  
   map.hideZoomSlider();
 }
 
+showDeleteButton = function(){
+    var b = registry.byId("delete-sketch-button").domNode;
+    domStyle.set(b, "visibility", "visible");
+}
+
+hideDeleteButton = function(){
+    var b = registry.byId("delete-sketch-button").domNode;
+    domStyle.set(b, "visibility", "hidden");
+}
+
+deleteGraphic = function(){
+    map.graphics.remove(edit_toolbar.getCurrentState().graphic);
+    edit_toolbar.deactivate();
+    hideDeleteButton();
+    updateSessionStorage();
+}
+
+toggleJoyPain = function(val, node){
+    if (val === false){
+        node.set('label','PAIN')
+    } else {
+        node.set('label', 'JOY')
+    }
+}
 
 function createEventListeners(){
 
    var edit_listener = map.graphics.on("click", function(e){
       if (!drawing) {
         edit_toolbar.activate(Edit.MOVE | Edit.SCALE | Edit.ROTATE, e.graphic);
+        showDeleteButton();
       }
   });
+
+   edit_toolbar.on("graphic-move-stop, rotate-stop, scale-stop", function(e){
+    edit_toolbar.deactivate();
+    updateSessionStorage();
+    hideDeleteButton();
+   })
 
   joy_toolbar.on("activate", function(e){
     console.log("joy: draw starting");
@@ -135,6 +175,15 @@ function createToolbars() {
   
   createEventListeners();
  
+}
+
+updateSessionStorage = function() {
+    var graphics = map.graphics.graphics;
+    var graphics_json = [];
+    for (var i = graphics.length - 1; i >= 0; i--) {
+        graphics_json.push(graphics[i].toJson());
+    };
+    window.sessionStorage.setItem("joy-pain-stored", JSON.stringify(graphics_json));
 }
 
 function addToMap(evt,joy_or_pain) {
@@ -183,11 +232,8 @@ function addToMap(evt,joy_or_pain) {
   var graphic = new Graphic(evt.geometry, symbol);
 
   map.graphics.add(graphic);
-  var number_graphics = map.graphics.graphics.length;
-  var graphics_json = JSON.parse(window.sessionStorage.getItem("joy-pain-stored"));
-  graphics_json.push(graphic.toJson());
   
-  window.sessionStorage.setItem("joy-pain-stored",JSON.stringify(graphics_json));
+  updateSessionStorage();
 }
 
 

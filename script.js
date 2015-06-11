@@ -135,7 +135,7 @@
         map.on("load", function(){
             createFeatureLayers();
             createToolbars(); 
-            maxExtent = map.extent;
+          
 
         });
 

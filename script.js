@@ -208,6 +208,7 @@
             map.on("click", function(e){
                 if (!e.graphic && edit_toolbar.getCurrentState().graphic){
                     edit_toolbar.deactivate();
+                    hideDeleteButton();
                 }
             });
 

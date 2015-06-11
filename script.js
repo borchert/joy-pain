@@ -214,12 +214,7 @@
 
             map.on("extent-change", function(e){
 
-                if((e.extent.xmin < maxExtent.xmin) ||
-                    (e.extent.ymin < maxExtent.ymin)  ||
-                    (e.extent.xmax > maxExtent.xmax) ||
-                    (e.extent.ymax > maxExtent.ymax) 
-                    ) {
-                
+                if(!maxExtent.contains(e.extent.getCenter()) ){
                     map.setExtent(maxExtent);
                     console.log("max extent reached, rolling back to previous extent");
                 }

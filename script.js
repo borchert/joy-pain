@@ -64,13 +64,14 @@
       });
 
         var maxExtentParams = {
-            "xmin":-10395523.528548198,
+            "xmin":-10398523.528548198,
             "ymin":5603665.400915724,
-            "xmax":-10344157.84554063,
+            "xmax":-10354071.866091402,
             "ymax":5629615.772018506,
             "spatialReference":{"wkid":102100}
         };
         maxExtent = Extent(maxExtentParams);
+
 
         geoLocate = new LocateButton({
           map: map
@@ -210,15 +211,18 @@
                 }
             });
 
-            map.on("extent-change", function(extent){
-               if((map.extent.xmin < maxExtent.xmin) ||
-                  (map.extent.ymin < maxExtent.ymin)  ||
-                  (map.extent.xmax > maxExtent.xmax) ||
-                  (map.extent.ymax > maxExtent.ymax) 
-                  ) {
-                  map.setExtent(maxExtent);
-              console.log("max extent reached, rolling back to previous extent");
-          }
+            map.on("extent-change", function(e){
+
+                if((e.extent.xmin < maxExtent.xmin) ||
+                    (e.extent.ymin < maxExtent.ymin)  ||
+                    (e.extent.xmax > maxExtent.xmax) ||
+                    (e.extent.ymax > maxExtent.ymax) 
+                    ) {
+                
+                    map.setExtent(maxExtent);
+                    console.log("max extent reached, rolling back to previous extent");
+                }
+
       });
 
 

@@ -15,6 +15,8 @@
     "esri/toolbars/edit",
     "esri/graphic",
     "esri/geometry/Extent",
+	"esri/dijit/InfoWindow",
+	"esri/InfoTemplate",
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleFillSymbol",
@@ -24,6 +26,7 @@
     "dojo/on",
     "dojo/dom",
     "dojo/dom-style",
+	"dojo/dom-construct",
     "dijit/layout/BorderContainer", 
     "dijit/layout/ContentPane", 
     "dijit/form/ToggleButton",
@@ -40,6 +43,8 @@
         Edit, 
         Graphic, 
         Extent,
+		InfoWindow,
+		InfoTemplate,
         SimpleMarkerSymbol, 
         SimpleLineSymbol, 
         SimpleFillSymbol,
@@ -48,7 +53,8 @@
         registry,
         on,
         dom,
-        domStyle
+        domStyle,
+		domConstruct
         ) {
 
         parser.parse();
@@ -60,7 +66,8 @@
 
         map = new Map("map", {
           center: [-93.17, 44.96],
-          zoom: 12
+          zoom: 12,
+		  //infoWindow: infoWindow
       });
 
         var maxExtentParams = {
@@ -77,6 +84,30 @@
           map: map
       }, "LocateButton");
         geoLocate.startup();
+		
+		// Symbology for selected feature when infowindow opens
+        /* var slsHighlightSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([38, 38, 38, 0.7]), 2);
+        var sms = new SimpleMarkerSymbol();
+        sms.setPath("M21.5,21.5h-18v-18h18V21.5z M12.5,3V0 M12.5,25v-3 M25,12.5h-3M3,12.5H0");
+        sms.setSize(45);
+        sms.setOutline(slsHighlightSymbol);
+        var infoWindow = new InfoWindow({markerSymbol: sms}, domConstruct.create("div"));		 */
+		
+		// Dictionary objects to provide domain value lookup for fields in popups
+		var joypainFieldDomainCodedValuesDict = {};
+		
+		/* // InfoTemplate for feature layer
+		var featureLayerInfoTemplate = new InfoTemplate();
+		var infoTemplateContent = 
+            "<span class=\"infoTemplateContentRowItem\">"+ 
+                "${Your_Story:requestJoyPainDomainLookup}"+
+            "</span><br>";
+        featureLayerInfoTemplate.setContent(infoTemplateContent); */
+		
+		// Formatting functions for infoTemplate
+        requestJoyPainDomainLookup = function (value, key, data){
+            return joypainFieldDomainCodedValuesDict[value];
+        };	
 
         var createFeatureLayers = function(){
             joyFillColor = new esri.Color([177, 137, 4, 0.25]);
@@ -106,13 +137,13 @@
             lineJoySymbol = new SimpleLineSymbol(
                 SimpleLineSymbol.STYLE_SHORTDOT,
                 joyLineColor,
-                3
+                2
                 );
 
             linePainSymbol = new SimpleLineSymbol(
                 SimpleLineSymbol.STYLE_SHORTDOT,
                 painLineColor,
-                3
+                2
                 );
 
 
@@ -124,9 +155,9 @@
             lineRenderer.addValue("Joy", lineJoySymbol);
             lineRenderer.addValue("Pain", linePainSymbol);
 
-            lineLayer = new FeatureLayer(featureUrl + "0");
+            lineLayer = new FeatureLayer(featureUrl + "0"); //add {infoTemplate: featureLayerInfoTemplate}
             lineLayer.setRenderer(lineRenderer);
-            polygonLayer = new FeatureLayer(featureUrl + "1");
+            polygonLayer = new FeatureLayer(featureUrl + "1"); //add {infoTemplate: featureLayerInfoTemplate}
             polygonLayer.setRenderer(polygonRenderer);
             map.addLayers([lineLayer, polygonLayer]);
 

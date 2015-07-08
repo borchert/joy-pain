@@ -45,6 +45,16 @@ transition: background-color 0.5s ease;
 background-color: #eee;
 }
 
+#inner-editor {
+    width: 12.5em;
+}
+
+.infoTemplateContentRowItem {
+    line-height: 2em;
+    padding-left: 0.5em;
+    vertical-align: middle;
+}
+
 #joy-pain-toggle-div {
   position: absolute;
   top: 20px;

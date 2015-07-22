@@ -11,6 +11,9 @@ html, body, #mainWindow {
     width: 100%; 
 }
 
+#storyDisplay {
+	max-width:200px;
+}
 html, body {
     margin: 0; 
     padding: 0;
@@ -43,6 +46,19 @@ border: 1px solid #57585A;
 #LocateButton .locateContainer .zoomLocateButton:hover {
 transition: background-color 0.5s ease;
 background-color: #eee;
+}
+
+#inner-editor {
+    width: 12.5em;
+}
+
+#infoWindowstyle {
+	background-color: red 
+}
+.infoTemplateContentRowItem {
+    line-height: 2em;
+    padding-left: 0.5em;
+    vertical-align: middle;
 }
 
 #joy-pain-toggle-div {

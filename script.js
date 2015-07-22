@@ -1,12 +1,12 @@
-  var map, joy_toolbar, pain_toolbar, symbol, geomTask, drawing, editing,
-  graphics_from_storage, showDeleteButton, hideDeleteButton, 
-  deleteGraphic, toggleJoyPain, updateSessionStorage, maxExtent,
+  var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton, 
+  hideDeleteButton, deleteGraphic, toggleJoyPain, maxExtent,
   lineLayer, polygonLayer, joyFillColor, painFillColor,
   joyLineColor, painLineColor, polygonJoySymbol, polygonPainSymbol,
-  lineJoySymbol, linePainSymbol;
+  lineJoySymbol, linePainSymbol, addStory, storyFeature;
 
   require([
-
+    "esri/tasks/query",
+	"dojo/dom",
     "esri/map", 
     "esri/layers/FeatureLayer",
     "esri/layers/WebTiledLayer",
@@ -15,15 +15,21 @@
     "esri/toolbars/edit",
     "esri/graphic",
     "esri/geometry/Extent",
+	"esri/dijit/InfoWindow",
+	"esri/dijit/InfoWindowLite",
+	"esri/InfoTemplate",
+	"dijit/form/Textarea",
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleFillSymbol",
     "esri/dijit/LocateButton",
     "dojo/parser", 
     "dijit/registry",
+	"dojo/dom-class",
     "dojo/on",
     "dojo/dom",
     "dojo/dom-style",
+	"dojo/dom-construct",
     "dijit/layout/BorderContainer", 
     "dijit/layout/ContentPane", 
     "dijit/form/ToggleButton",
@@ -32,6 +38,8 @@
     "dojo/domReady!"
 
     ], function(
+		Query,
+		dom,
         Map,
         FeatureLayer,
         WebTiledLayer,
@@ -40,15 +48,21 @@
         Edit, 
         Graphic, 
         Extent,
+		InfoWindow,
+		InfoWindowLite,
+		InfoTemplate,
+		Textarea,
         SimpleMarkerSymbol, 
         SimpleLineSymbol, 
         SimpleFillSymbol,
         LocateButton,
         parser, 
         registry,
+		domClass,
         on,
         dom,
-        domStyle
+        domStyle,
+		domConstruct
         ) {
 
         parser.parse();
@@ -57,10 +71,22 @@
         var pencilMapUrl = "http://${subDomain}.tiles.mapbox.com/v4/mmcfarlane83.lm01cdj5/${level}/${col}/${row}.png?" +
         "access_token=pk.eyJ1IjoianRyZWlua2UiLCJhIjoiaHF3VDZDMCJ9.vcDB3i-OmaAFJvOfpD6M_Q";
         var pencilMap = new WebTiledLayer(pencilMapUrl, {subDomains:["a","b","c","d"]});
-
+		
+		polygonLayer = new FeatureLayer(featureUrl + "1",
+		{id: "polygonLayer"}
+		);
+		lineLayer = new FeatureLayer(featureUrl + "0",
+		{id: "lineLayer"}
+		);
+		
+		var infoWindow = new InfoWindow({domNode: domConstruct.create("div", null, dom.byId("infoWindowStyle"))});
+		//domClass.add(infoWindow.domNode, "red");
+		infoWindow.startup();
+		
         map = new Map("map", {
           center: [-93.17, 44.96],
-          zoom: 12
+          zoom: 12,
+		  infoWindow: infoWindow
       });
 
         var maxExtentParams = {
@@ -77,7 +103,45 @@
           map: map
       }, "LocateButton");
         geoLocate.startup();
+		
+		
+		// Symbology for selected feature when infowindow opens
+        /* var slsHighlightSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([38, 38, 38, 0.7]), 2);
+        var sms = new SimpleMarkerSymbol();
+        sms.setPath("M21.5,21.5h-18v-18h18V21.5z M12.5,3V0 M12.5,25v-3 M25,12.5h-3M3,12.5H0");
+        sms.setSize(45);
+        sms.setOutline(slsHighlightSymbol);
+        var infoWindow = new InfoWindow({markerSymbol: sms}, domConstruct.create("div"));		 */
+		
+		// InfoTemplate for feature layer
+		var featureLayerInfoTemplate = new InfoTemplate();
 
+		var infoTemplateContent = function(graphic){
+			storyFeature = graphic;
+			var story = graphic.attributes.Your_Story !== null ? graphic.attributes.Your_Story : "";
+			return "<span id='storyDisplay' class=\"infoTemplateContentRowItem\">"+ 
+                 story + 
+            "</span><br/><textarea id='story-text'></textarea><br/>"+
+			"<button onclick='addStory(storyFeature);' id='story-button' type= 'button'>\Submit\</button>";
+		}
+		
+		addStory = function (feature) {
+			var story_text = dom.byId("story-text").value;
+			if (story_text.length > 1000){
+				alert("Too long!");
+				return;
+			}
+			var layer = feature.getLayer();
+			var attributes = feature.attributes;
+			attributes.Your_Story = story_text;
+			layer.applyEdits(null,[feature],null);
+			dom.byId("storyDisplay").innerHTML = story_text;
+			
+		};
+		
+		featureLayerInfoTemplate.setContent(infoTemplateContent);
+		featureLayerInfoTemplate.setTitle("Your Story:");
+		
         var createFeatureLayers = function(){
             joyFillColor = new esri.Color([177, 137, 4, 0.25]);
             joyLineColor = new esri.Color([177, 137, 4, 0.5]);
@@ -106,15 +170,14 @@
             lineJoySymbol = new SimpleLineSymbol(
                 SimpleLineSymbol.STYLE_SHORTDOT,
                 joyLineColor,
-                3
+                2
                 );
 
             linePainSymbol = new SimpleLineSymbol(
                 SimpleLineSymbol.STYLE_SHORTDOT,
                 painLineColor,
-                3
+                2
                 );
-
 
             var polygonRenderer = new UniqueValueRenderer(null, "Joy_Pain");
             polygonRenderer.addValue("Joy", polygonJoySymbol);
@@ -124,9 +187,15 @@
             lineRenderer.addValue("Joy", lineJoySymbol);
             lineRenderer.addValue("Pain", linePainSymbol);
 
-            lineLayer = new FeatureLayer(featureUrl + "0");
+            lineLayer = new FeatureLayer(featureUrl + "0", 
+			{id: "lineLayer",infoTemplate: featureLayerInfoTemplate,
+			outFields: ["*"],
+			}); 
             lineLayer.setRenderer(lineRenderer);
-            polygonLayer = new FeatureLayer(featureUrl + "1");
+            polygonLayer = new FeatureLayer(featureUrl + "1", 
+			{id: "polygonLayer",infoTemplate: featureLayerInfoTemplate,
+			outFields: ["*"],
+			}); 
             polygonLayer.setRenderer(polygonRenderer);
             map.addLayers([lineLayer, polygonLayer]);
 
@@ -157,10 +226,12 @@
 
             var joy_pain_toggle_state = registry.byId("joy-pain-toggle").checked;
 
-            if (joy_pain_toggle_state){
+            if (joy_pain_toggle_state === true){
+				pain_toolbar.deactivate();
                 joy_toolbar.activate(Draw[tool]);
             }
             else {
+				joy_toolbar.deactivate();
                 pain_toolbar.activate(Draw[tool]);
             }
 
@@ -206,10 +277,12 @@
             polygonLayer.on("click", activateEditing);
 
             map.on("click", function(e){
-                if (!e.graphic && edit_toolbar.getCurrentState().graphic){
+                //if (!e.graphic && edit_toolbar.getCurrentState().graphic){
+                if (!e.graphic){
                     edit_toolbar.deactivate();
                     hideDeleteButton();
-                }
+					map.infoWindow.hide();
+                }	
             });
 
             map.on("extent-change", function(e){
@@ -219,7 +292,7 @@
                     console.log("max extent reached, rolling back to previous extent");
                 }
 
-      });
+			});
 
 
             edit_toolbar.on("graphic-move-stop, rotate-stop, scale-stop", function(e){

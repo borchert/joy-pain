@@ -16,13 +16,10 @@
     "esri/graphic",
     "esri/geometry/Extent",
 	"esri/dijit/InfoWindow",
-<<<<<<< HEAD
 	"esri/dijit/InfoWindowLite",
 	"esri/InfoTemplate",
 	"dijit/form/Textarea",
-=======
 	"esri/InfoTemplate",
->>>>>>> origin/master
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleFillSymbol",
@@ -53,13 +50,10 @@
         Graphic, 
         Extent,
 		InfoWindow,
-<<<<<<< HEAD
 		InfoWindowLite,
 		InfoTemplate,
 		Textarea,
-=======
 		InfoTemplate,
->>>>>>> origin/master
         SimpleMarkerSymbol, 
         SimpleLineSymbol, 
         SimpleFillSymbol,
@@ -80,33 +74,15 @@
         "access_token=pk.eyJ1IjoianRyZWlua2UiLCJhIjoiaHF3VDZDMCJ9.vcDB3i-OmaAFJvOfpD6M_Q";
         var pencilMap = new WebTiledLayer(pencilMapUrl, {subDomains:["a","b","c","d"]});
 		
-<<<<<<< HEAD
-		polygonLayer = new FeatureLayer(featureUrl + "1",
-		{id: "polygonLayer"}
-		);
-		lineLayer = new FeatureLayer(featureUrl + "0",
-		{id: "lineLayer"}
-		);
-		
 		var infoWindow = new InfoWindow({domNode: domConstruct.create("div", null, dom.byId("infoWindowStyle"))});
 		//domClass.add(infoWindow.domNode, "red");
-=======
-		var infoWindow = new InfoWindow({}, domConstruct.create("div"));
->>>>>>> origin/master
+
 		infoWindow.startup();
 		
         map = new Map("map", {
           center: [-93.17, 44.96],
           zoom: 12,
-<<<<<<< HEAD
 		  infoWindow: infoWindow
-=======
-<<<<<<< HEAD
-		  infoWindow: infoWindow
-=======
-		  //infoWindow: infoWindow
->>>>>>> origin/master
->>>>>>> origin/master
       });
 
         var maxExtentParams = {
@@ -124,10 +100,7 @@
       }, "LocateButton");
         geoLocate.startup();
 		
-<<<<<<< HEAD
-		
-=======
->>>>>>> origin/master
+
 		// Symbology for selected feature when infowindow opens
         /* var slsHighlightSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([38, 38, 38, 0.7]), 2);
         var sms = new SimpleMarkerSymbol();
@@ -136,17 +109,21 @@
         sms.setOutline(slsHighlightSymbol);
         var infoWindow = new InfoWindow({markerSymbol: sms}, domConstruct.create("div"));		 */
 		
-<<<<<<< HEAD
 		// InfoTemplate for feature layer
 		var featureLayerInfoTemplate = new InfoTemplate();
 
 		var infoTemplateContent = function(graphic){
-			storyFeature = graphic;
-			var story = graphic.attributes.Your_Story !== null ? graphic.attributes.Your_Story : "";
-			return "<span id='storyDisplay' class=\"infoTemplateContentRowItem\">"+ 
-                 story + 
-            "</span><br/><textarea id='story-text'></textarea><br/>"+
-			"<button onclick='addStory(storyFeature);' id='story-button' type= 'button'>\Submit\</button>";
+            storyFeature = graphic;
+            if (graphic.attributes.Your_Story && graphic.attributes.Your_Story.length > 0){
+                return "<span id='storyDisplay' class=\"infoTemplateContentRowItem\">"+ 
+                    graphic.attributes.Your_Story + 
+                    "</span>";
+            }
+            else {
+                return "<textarea id='story-text'></textarea><br/>"+
+                    "<button onclick='addStory(storyFeature);' id='story-button' type= 'button'>\Submit\</button>";
+            }
+			
 		}
 		
 		addStory = function (feature) {
@@ -159,43 +136,14 @@
 			var attributes = feature.attributes;
 			attributes.Your_Story = story_text;
 			layer.applyEdits(null,[feature],null);
-			dom.byId("storyDisplay").innerHTML = story_text;
+			map.infoWindow.hide();
+            edit_toolbar.deactivate();
 			
 		};
 		
 		featureLayerInfoTemplate.setContent(infoTemplateContent);
 		featureLayerInfoTemplate.setTitle("Your Story:");
 		
-=======
-<<<<<<< HEAD
-		// InfoTemplate for feature layer
-		var featureLayerInfoTemplate = new InfoTemplate();
-		var infoTemplateContent = 
-            "<span class=\"infoTemplateContentRowItem\">"+ 
-                "${Your_Story}"+
-            "</span><br>";
-        featureLayerInfoTemplate.setContent(infoTemplateContent);
-		featureLayerInfoTemplate.setTitle("Your Story:");
-		
-=======
-		// Dictionary objects to provide domain value lookup for fields in popups
-		var joypainFieldDomainCodedValuesDict = {};
-		
-		/* // InfoTemplate for feature layer
-		var featureLayerInfoTemplate = new InfoTemplate();
-		var infoTemplateContent = 
-            "<span class=\"infoTemplateContentRowItem\">"+ 
-                "${Your_Story:requestJoyPainDomainLookup}"+
-            "</span><br>";
-        featureLayerInfoTemplate.setContent(infoTemplateContent); */
-		
-		// Formatting functions for infoTemplate
-        requestJoyPainDomainLookup = function (value, key, data){
-            return joypainFieldDomainCodedValuesDict[value];
-        };	
-
->>>>>>> origin/master
->>>>>>> origin/master
         var createFeatureLayers = function(){
             joyFillColor = new esri.Color([177, 137, 4, 0.25]);
             joyLineColor = new esri.Color([177, 137, 4, 0.5]);
@@ -241,33 +189,18 @@
             lineRenderer.addValue("Joy", lineJoySymbol);
             lineRenderer.addValue("Pain", linePainSymbol);
 
-<<<<<<< HEAD
             lineLayer = new FeatureLayer(featureUrl + "0", 
-			{id: "lineLayer",infoTemplate: featureLayerInfoTemplate,
-			outFields: ["*"],
+			{
+                infoTemplate: featureLayerInfoTemplate,
+			     outFields: ["*"]
 			}); 
             lineLayer.setRenderer(lineRenderer);
+
             polygonLayer = new FeatureLayer(featureUrl + "1", 
-			{id: "polygonLayer",infoTemplate: featureLayerInfoTemplate,
-			outFields: ["*"],
+			{
+                infoTemplate: featureLayerInfoTemplate,
+			     outFields: ["*"]
 			}); 
-=======
-<<<<<<< HEAD
-            lineLayer = new FeatureLayer(featureUrl + "0", 
-			{infoTemplate: featureLayerInfoTemplate,
-			outFields: ["*"],
-			}); 
-            lineLayer.setRenderer(lineRenderer);
-            polygonLayer = new FeatureLayer(featureUrl + "1", 
-			{infoTemplate: featureLayerInfoTemplate,
-			outFields: ["*"],
-			}); 
-=======
-            lineLayer = new FeatureLayer(featureUrl + "0"); //add {infoTemplate: featureLayerInfoTemplate}
-            lineLayer.setRenderer(lineRenderer);
-            polygonLayer = new FeatureLayer(featureUrl + "1"); //add {infoTemplate: featureLayerInfoTemplate}
->>>>>>> origin/master
->>>>>>> origin/master
             polygonLayer.setRenderer(polygonRenderer);
             map.addLayers([lineLayer, polygonLayer]);
 
@@ -326,6 +259,7 @@
             layer.applyEdits(null,null,[graphic]);
             edit_toolbar.deactivate();
             hideDeleteButton();
+            map.infoWindow.hide();
         }
 
         toggleJoyPain = function(val, node){
@@ -376,13 +310,17 @@
             });
 
             var deleteKeyPress = map.on("key-down",function(e){
-                if (edit_toolbar.getCurrentState().graphic === undefined){
-                    return;
-                }
+                
                 if (e.which === 8){
                     e.preventDefault();
                     e.stopPropagation();
-                    deleteGraphic();
+                    if (edit_toolbar.getCurrentState().graphic === undefined){
+                        return;
+                    }
+                    else {
+                        deleteGraphic();
+                    }
+                    
                 }
             });
 

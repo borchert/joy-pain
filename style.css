@@ -52,9 +52,12 @@ background-color: #eee;
     width: 12.5em;
 }
 
+<<<<<<< HEAD
 #infoWindowstyle {
 	background-color: red 
 }
+=======
+>>>>>>> origin/master
 .infoTemplateContentRowItem {
     line-height: 2em;
     padding-left: 0.5em;

@@ -16,9 +16,13 @@
     "esri/graphic",
     "esri/geometry/Extent",
 	"esri/dijit/InfoWindow",
+<<<<<<< HEAD
 	"esri/dijit/InfoWindowLite",
 	"esri/InfoTemplate",
 	"dijit/form/Textarea",
+=======
+	"esri/InfoTemplate",
+>>>>>>> origin/master
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleFillSymbol",
@@ -49,9 +53,13 @@
         Graphic, 
         Extent,
 		InfoWindow,
+<<<<<<< HEAD
 		InfoWindowLite,
 		InfoTemplate,
 		Textarea,
+=======
+		InfoTemplate,
+>>>>>>> origin/master
         SimpleMarkerSymbol, 
         SimpleLineSymbol, 
         SimpleFillSymbol,
@@ -72,6 +80,7 @@
         "access_token=pk.eyJ1IjoianRyZWlua2UiLCJhIjoiaHF3VDZDMCJ9.vcDB3i-OmaAFJvOfpD6M_Q";
         var pencilMap = new WebTiledLayer(pencilMapUrl, {subDomains:["a","b","c","d"]});
 		
+<<<<<<< HEAD
 		polygonLayer = new FeatureLayer(featureUrl + "1",
 		{id: "polygonLayer"}
 		);
@@ -81,12 +90,23 @@
 		
 		var infoWindow = new InfoWindow({domNode: domConstruct.create("div", null, dom.byId("infoWindowStyle"))});
 		//domClass.add(infoWindow.domNode, "red");
+=======
+		var infoWindow = new InfoWindow({}, domConstruct.create("div"));
+>>>>>>> origin/master
 		infoWindow.startup();
 		
         map = new Map("map", {
           center: [-93.17, 44.96],
           zoom: 12,
+<<<<<<< HEAD
 		  infoWindow: infoWindow
+=======
+<<<<<<< HEAD
+		  infoWindow: infoWindow
+=======
+		  //infoWindow: infoWindow
+>>>>>>> origin/master
+>>>>>>> origin/master
       });
 
         var maxExtentParams = {
@@ -104,7 +124,10 @@
       }, "LocateButton");
         geoLocate.startup();
 		
+<<<<<<< HEAD
 		
+=======
+>>>>>>> origin/master
 		// Symbology for selected feature when infowindow opens
         /* var slsHighlightSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([38, 38, 38, 0.7]), 2);
         var sms = new SimpleMarkerSymbol();
@@ -113,6 +136,7 @@
         sms.setOutline(slsHighlightSymbol);
         var infoWindow = new InfoWindow({markerSymbol: sms}, domConstruct.create("div"));		 */
 		
+<<<<<<< HEAD
 		// InfoTemplate for feature layer
 		var featureLayerInfoTemplate = new InfoTemplate();
 
@@ -142,6 +166,36 @@
 		featureLayerInfoTemplate.setContent(infoTemplateContent);
 		featureLayerInfoTemplate.setTitle("Your Story:");
 		
+=======
+<<<<<<< HEAD
+		// InfoTemplate for feature layer
+		var featureLayerInfoTemplate = new InfoTemplate();
+		var infoTemplateContent = 
+            "<span class=\"infoTemplateContentRowItem\">"+ 
+                "${Your_Story}"+
+            "</span><br>";
+        featureLayerInfoTemplate.setContent(infoTemplateContent);
+		featureLayerInfoTemplate.setTitle("Your Story:");
+		
+=======
+		// Dictionary objects to provide domain value lookup for fields in popups
+		var joypainFieldDomainCodedValuesDict = {};
+		
+		/* // InfoTemplate for feature layer
+		var featureLayerInfoTemplate = new InfoTemplate();
+		var infoTemplateContent = 
+            "<span class=\"infoTemplateContentRowItem\">"+ 
+                "${Your_Story:requestJoyPainDomainLookup}"+
+            "</span><br>";
+        featureLayerInfoTemplate.setContent(infoTemplateContent); */
+		
+		// Formatting functions for infoTemplate
+        requestJoyPainDomainLookup = function (value, key, data){
+            return joypainFieldDomainCodedValuesDict[value];
+        };	
+
+>>>>>>> origin/master
+>>>>>>> origin/master
         var createFeatureLayers = function(){
             joyFillColor = new esri.Color([177, 137, 4, 0.25]);
             joyLineColor = new esri.Color([177, 137, 4, 0.5]);
@@ -187,6 +241,7 @@
             lineRenderer.addValue("Joy", lineJoySymbol);
             lineRenderer.addValue("Pain", linePainSymbol);
 
+<<<<<<< HEAD
             lineLayer = new FeatureLayer(featureUrl + "0", 
 			{id: "lineLayer",infoTemplate: featureLayerInfoTemplate,
 			outFields: ["*"],
@@ -196,6 +251,23 @@
 			{id: "polygonLayer",infoTemplate: featureLayerInfoTemplate,
 			outFields: ["*"],
 			}); 
+=======
+<<<<<<< HEAD
+            lineLayer = new FeatureLayer(featureUrl + "0", 
+			{infoTemplate: featureLayerInfoTemplate,
+			outFields: ["*"],
+			}); 
+            lineLayer.setRenderer(lineRenderer);
+            polygonLayer = new FeatureLayer(featureUrl + "1", 
+			{infoTemplate: featureLayerInfoTemplate,
+			outFields: ["*"],
+			}); 
+=======
+            lineLayer = new FeatureLayer(featureUrl + "0"); //add {infoTemplate: featureLayerInfoTemplate}
+            lineLayer.setRenderer(lineRenderer);
+            polygonLayer = new FeatureLayer(featureUrl + "1"); //add {infoTemplate: featureLayerInfoTemplate}
+>>>>>>> origin/master
+>>>>>>> origin/master
             polygonLayer.setRenderer(polygonRenderer);
             map.addLayers([lineLayer, polygonLayer]);
 

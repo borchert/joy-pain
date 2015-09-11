@@ -321,10 +321,14 @@
             joy_toolbar.on("activate", function(e){
                 console.log("joy: draw starting");
                 drawing = true;
+                storyFeature = null;
+                edit_toolbar.deactivate();
             });
             pain_toolbar.on("activate", function(e){
                 console.log("pain: draw starting");
                 drawing = true;
+                storyFeature = null;
+                edit_toolbar.deactivate();
             });
 
             joy_toolbar.on("draw-end", function(e){
@@ -387,6 +391,10 @@
 
             polygonLayer.applyEdits([graphic]);
         }
+
+        storyFeature = graphic;
+        map.infoWindow.setContent("<textarea id='story-text'></textarea><br/>");
+        map.infoWindow.show();
 
     }
 

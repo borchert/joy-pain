@@ -3,24 +3,38 @@ width:500px;
 height:500px;
 }
 
+.vex.vex-theme-flat-attack .vex-dialog-button.vex-dialog-button-save-joy {
+  background: #b18904;
+  color: #fff; }
+.vex.vex-theme-flat-attack .vex-dialog-button.vex-dialog-button-save-pain {
+  background: #545454;
+  color: #fff; }
+
+.vex.vex-theme-flat-attack .vex-dialog-button.vex-dialog-button-save-joy:hover {
+    background: #b18904;
+}
+.vex.vex-theme-flat-attack .vex-dialog-button.vex-dialog-button-save-pain:hover {
+    background: #545454;
+}
+
 
 html, body, #mainWindow {
     font-family: 'Source Sans Pro', sans-serif;
     color: #4C4C4C;
-    height: 100%; 
-    width: 100%; 
+    height: 100%;
+    width: 100%;
 }
 
 #storyDisplay {
 	max-width:200px;
 }
 html, body {
-    margin: 0; 
+    margin: 0;
     padding: 0;
 }
 
 #header {
-    height: 80px; 
+    height: 80px;
     overflow: auto;
     padding: 0.5em;
 }
@@ -28,7 +42,7 @@ html, body {
     position: absolute;
     top: 95px;
     left: 25px;
-    z-index: 50; 
+    z-index: 50;
 }
 
 #map span.fa.map-icon {
@@ -52,12 +66,6 @@ background-color: #eee;
     width: 12.5em;
 }
 
-<<<<<<< HEAD
-#infoWindowstyle {
-	background-color: red 
-}
-=======
->>>>>>> origin/master
 .infoTemplateContentRowItem {
     line-height: 2em;
     padding-left: 0.5em;
@@ -84,12 +92,12 @@ background-color: #eee;
 
 }
 #draw-tools-div .dijitButtonNode {
-    
+
     border: 1px solid #57585A;
     padding: 1px 2px;
-    
+
 }
-    
+
 
 
 #joy-pain-toggle-div .dijitToggleButton .dijitButtonText{

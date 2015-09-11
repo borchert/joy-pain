@@ -6,36 +6,52 @@
   	<meta name="apple-mobile-web-app-status-bar-style" content="translucent-black">
   	<meta name='viewport' content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no' />
     <title>Joy & Pain Map</title>
-  	<link rel="stylesheet" href="http://js.arcgis.com/3.12/esri/css/esri.css">
-	<link rel="stylesheet" href="http://js.arcgis.com/3.14/esri/css/esri.css/dijit/css/InfoWindow.css">
-  	<link rel="stylesheet" href="http://js.arcgis.com/3.12/dijit/themes/nihilo/nihilo.css">
-    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
+  	<link rel="stylesheet" href="//js.arcgis.com/3.12/esri/css/esri.css">
+  	<link rel="stylesheet" href="//js.arcgis.com/3.12/dijit/themes/nihilo/nihilo.css">
+    <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="vex-2.2.1/css/vex.css" />
+    <link rel="stylesheet" href="vex-2.2.1/css/vex-theme-flat-attack.css" />
     <link rel="stylesheet" href="style.css" >
   </head>
   <body class="nihilo">
 
-    <div id="mainWindow" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline'">
-      <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
-          <div id="LocateButton"></div>
-          <div id="joy-pain-toggle-div">
-            <button id='joy-pain-toggle-button' data-dojo-type="dijit/form/ToggleButton" 
-              data-dojo-props="id:'joy-pain-toggle', onChange: function(val){toggleJoyPain(val,this);}, checked: true">
-                JOY
-            </button>
-            <div id='draw-tools-div' data-dojo-type="dijit/layout/ContentPane">
-              <button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Draw a Line</button>
-              <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Create a Shape</button>
-              <button data-tool-name="CIRCLE" data-dojo-type="dijit/form/Button">Place a Circle</button>
-            </div>
-            <button id="delete-sketch-button" style="visibility:hidden" data-dojo-type="dijit/form/Button"
-                data-dojo-props="onClick:function(){deleteGraphic();}">
-                <span class="fa fa-trash map-icon"></span>
-            </button>
-          </div>
+      <div id="mainWindow" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline'">
+          <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
+              <div id="LocateButton"></div>
+              <div id="joy-pain-toggle-div">
+                  <button id='joy-pain-toggle-button' data-dojo-type="dijit/form/ToggleButton"
+                  data-dojo-props="id:'joy-pain-toggle', onChange: function(val){toggleJoyPain(val,this);}, checked: true">
+                  JOY
+                  </button>
+
+                  <div id='draw-tools-div' data-dojo-type="dijit/layout/ContentPane">
+                      <button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Draw a Line</button>
+                      <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Create a Shape</button>
+                      <button data-tool-name="CIRCLE" data-dojo-type="dijit/form/Button">Place a Circle</button>
+                  </div>
+
+                  <button id="delete-sketch-button" style="visibility:hidden" data-dojo-type="dijit/form/Button"
+                  data-dojo-props="onClick:function(){deleteGraphic();}">
+                    <span class="fa fa-trash map-icon"></span>
+                  </button>
+              </div>
         </div>
-	   </div>
-    <script src="http://js.arcgis.com/3.12/"></script>
+    </div>
+
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="vex-2.2.1/js/vex.combined.min.js"></script>
+    <script>vex.defaultOptions.className = 'vex-theme-flat-attack';</script>
+    <script>
+        var dojoConfig = {
+            parseOnLoad:false,
+            packages: [{
+              "name": "customInfowindow",
+              "location": location.pathname.replace(/\/[^/]+$/, "") + "customInfowindow"
+          }]
+        };
+    </script>
+    <script src="//js.arcgis.com/3.12compact/"></script>
   	<script type="text/javascript" src="script.js"></script>
   </body>
 </html>

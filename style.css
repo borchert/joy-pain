@@ -101,22 +101,31 @@ background-color: #eee;
 
 
 #joy-pain-toggle-div .dijitToggleButton .dijitButtonText{
-padding:4px 8px;
+padding: 4px 8px;
 }
+
+#joy-button-div, #pain-button-div {
+display: inline;
+}
+
+#joy-pain-toggle-subdiv
 
 #joy-pain-toggle-div .dijitToggleButton, #joy-pain-toggle-div .dijitToggleButton > span {
-width:95%;
+width:65%;
 }
 
-#joy-pain-toggle-div .dijitToggleButton span {
+#pain-button-div .dijitToggleButton span {
 border-radius: 50px;
 transition: background-color 1s ease,
             width 1s ease;
 background-color:#545454;
 color:white;
 }
-#joy-pain-toggle-div .dijitToggleButton.dijitChecked span {
+
+#joy-button-div .dijitToggleButton span {
+border-radius: 50px;
 transition: background-color 1s ease,
             width 1s ease;
 background-color:#b18904;
+color:white;
 }

@@ -223,9 +223,9 @@
                 return;
             }
 
-            var joy_pain_toggle_state = registry.byId("joy-pain-toggle").checked;
+            var joy_toggle_state = registry.byId("joy-pain-toggle-joy").checked;
 
-            if (joy_pain_toggle_state === true){
+            if (joy_toggle_state === true){
 				pain_toolbar.deactivate();
                 joy_toolbar.activate(Draw[tool]);
             }
@@ -233,6 +233,17 @@
 				joy_toolbar.deactivate();
                 pain_toolbar.activate(Draw[tool]);
             }
+			
+			var pain_toggle_state = registry.byId("joy-pain-toggle-pain").checked;
+			
+			if (pain_toggle_state === true){
+				joy_toolbar.deactivate();
+				pain_toolbar.activate(Draw[tool]);
+			}
+			else {
+				pain_toolbar.deactivate();
+				joy_toolbar.activate(Draw[tool]);
+			}
 
             map.hideZoomSlider();
         }
@@ -258,9 +269,9 @@
 
         toggleJoyPain = function(val, node){
             if (val === false){
-                node.set('label','PAIN');
+                //node.set('label','PAIN');
             } else {
-                node.set('label', 'JOY');
+                //node.set('label', 'JOY');
             }
         };
 

@@ -20,10 +20,20 @@
           <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
               <div id="LocateButton"></div>
               <div id="joy-pain-toggle-div">
-                  <button id='joy-pain-toggle-button' data-dojo-type="dijit/form/ToggleButton"
-                  data-dojo-props="id:'joy-pain-toggle', onChange: function(val){toggleJoyPain(val,this);}, checked: true">
-                  JOY
-                  </button>
+				<div id="joy-pain-toggle-subdiv">
+				  <div id="joy-button-div">
+					<button id='joy-button' data-dojo-type="dijit/form/ToggleButton"
+					data-dojo-props="id:'joy-pain-toggle-joy', onChange: 	function(val){toggleJoyPain(val,this);}, checked: true">
+					JOY
+					</button>
+				  </div>
+				  <div id="pain-button-div">
+					<button id='pain-button' data-dojo-type="dijit/form/ToggleButton"
+					data-dojo-props="id:'joy-pain-toggle-pain', onChange: function(val){toggleJoyPain(val,this);}, checked: true">
+					PAIN
+					</button>
+				  </div>
+				</div>
 
                   <div id='draw-tools-div' data-dojo-type="dijit/layout/ContentPane">
                       <button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Draw a Line</button>

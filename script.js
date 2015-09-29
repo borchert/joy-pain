@@ -1,7 +1,7 @@
   var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
   hideDeleteButton, deleteGraphic, toggleJoyPain, maxExtent,
   lineLayer, polygonLayer, joyFillColor, painFillColor,
-  joyLineColor, painLineColor, polygonJoySymbol, polygonPainSymbol,
+  joyLineColor, painLineColor, drawingColor, polygonJoySymbol, polygonPainSymbol,
   lineJoySymbol, linePainSymbol, addStory, storyFeature;
 
   require([
@@ -144,6 +144,7 @@
             joyLineColor = new esri.Color([177, 137, 4, 0.55]);
             painFillColor = new esri.Color([0, 0, 0, 0.3]);
             painLineColor = new esri.Color([0, 0, 0, 0.5]);
+			drawingColor = new esri.Color([0,65,106]);
 
             polygonJoySymbol = new SimpleFillSymbol(
                 SimpleFillSymbol.STYLE_SOLID,
@@ -267,13 +268,23 @@
             map.infoWindow.hide();
         };
 
-        toggleJoyPain = function(val, node){
+        /* toggleJoyPain = function(val, node){
             if (val === false){
-                //node.set('label','PAIN');
+                domClass.toggle("node", "joy-pain-button-inactive");
             } else {
-                //node.set('label', 'JOY');
+                node.set('label', 'JOY');
             }
-        };
+        }; */
+		
+		toggleJoyPain = function(){
+			domClass.toggle('joy-button-div', 'joy-pain-button-inactive');
+		};
+		
+		/* toggleJoyPain = function(domClass, dom, on){
+				on(dom.byId("joy-button"), "click", function(){
+					domClass.toggle("joy-button-div", "joy-pain-button-inactive");
+				});
+			}; */
 
         function createEventListeners(){
 
@@ -334,12 +345,20 @@
                 drawing = true;
                 storyFeature = null;
                 edit_toolbar.deactivate();
+				var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new esri.Color([0,65,106]),2);
+				var fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, lineSymbol, new esri.Color([0,65,106,0.5]));
+				joy_toolbar.setLineSymbol(lineSymbol);
+				joy_toolbar.setFillSymbol(fillSymbol);
             });
             pain_toolbar.on("activate", function(e){
                 console.log("pain: draw starting");
                 drawing = true;
                 storyFeature = null;
                 edit_toolbar.deactivate();
+				var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new esri.Color([0,65,106]),2);
+				var fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, lineSymbol, new esri.Color([0,65,106,0.5]));
+				pain_toolbar.setLineSymbol(lineSymbol);
+				pain_toolbar.setFillSymbol(fillSymbol);
             });
 
             joy_toolbar.on("draw-end", function(e){

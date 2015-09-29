@@ -17,6 +17,9 @@ height:500px;
     background: #545454;
 }
 
+.vex.vex-theme-flat-attack .vex-content {
+	background: rgba(255,255,255,0.6);
+}
 
 html, body, #mainWindow {
     font-family: 'Source Sans Pro', sans-serif;
@@ -110,7 +113,7 @@ display: inline;
 
 #joy-pain-toggle-subdiv
 
-#joy-pain-toggle-div .dijitToggleButton, #joy-pain-toggle-div .dijitToggleButton > span {
+#joy-pain-toggle-div .dijitToggleButton{
 width:65%;
 }
 
@@ -128,4 +131,9 @@ transition: background-color 1s ease,
             width 1s ease;
 background-color:#b18904;
 color:white;
+}
+
+.joy-pain-button-inactive {
+	background-color: white;
+	color: #2A2A2A;
 }

@@ -23,13 +23,13 @@
 				<div id="joy-pain-toggle-subdiv">
 				  <div id="joy-button-div">
 					<button id='joy-button' data-dojo-type="dijit/form/ToggleButton"
-					data-dojo-props="id:'joy-pain-toggle-joy', onChange: 	function(val){toggleJoyPain(val,this);}, checked: true">
+					data-dojo-props="id:'joy-pain-toggle-joy', onChange: 	function(){toggleJoyPain();}, checked: true">
 					JOY
 					</button>
 				  </div>
 				  <div id="pain-button-div">
 					<button id='pain-button' data-dojo-type="dijit/form/ToggleButton"
-					data-dojo-props="id:'joy-pain-toggle-pain', onChange: function(val){toggleJoyPain(val,this);}, checked: true">
+					data-dojo-props="id:'joy-pain-toggle-pain', onChange: function(){toggleJoyPain(this);}, checked: true">
 					PAIN
 					</button>
 				  </div>

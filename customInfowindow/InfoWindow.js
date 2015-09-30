@@ -124,6 +124,7 @@ function(
 
             if (this._showSaveButton){
                 var joy_or_pain = this.getJoyPain();
+				vex.dialog.buttons.NO.text = "Skip";
                 this._buttons = [
                      vex.dialog.buttons.NO,
                      $.extend({}, vex.dialog.buttons.NO, {

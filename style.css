@@ -121,16 +121,22 @@ width:65%;
 border-radius: 50px;
 transition: background-color 1s ease,
             width 1s ease;
-background-color:#545454;
-color:white;
 }
 
 #joy-button-div .dijitToggleButton span {
 border-radius: 50px;
 transition: background-color 1s ease,
             width 1s ease;
-background-color:#b18904;
-color:white;
+}
+
+.joy-button-active {
+	background-color:#b18904;
+	color:white;
+}
+
+.pain-button-active {
+	background-color:#545454;
+	color:white;
 }
 
 .joy-pain-button-inactive {

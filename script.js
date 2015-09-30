@@ -115,8 +115,19 @@
                 return "<textarea id='story-text'></textarea><br/>";
             }
 		};
+		
+		var infoTemplateTitle = function(graphic) {
+			var epochDate = new Date(graphic.attributes.Date);
+			var localtimeDate = epochDate.toLocaleString();
+			if (graphic.attributes.Your_Story && graphic.attributes.Your_Story.length > 0){
+			return "Shared On: " + localtimeDate;
+			}
+			else {
+				return "Share Your Story: ";
+			}
+		}
 
-        var featureLayerInfoTemplate = new InfoTemplate("Your Story:", infoTemplateContent);
+        var featureLayerInfoTemplate = new InfoTemplate(infoTemplateTitle, infoTemplateContent);
 
 		addStory = function (feature) {
 			var story_text = dom.byId("story-text").value;

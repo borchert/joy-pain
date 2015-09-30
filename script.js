@@ -118,7 +118,7 @@
 		
 		var infoTemplateTitle = function(graphic) {
 			var epochDate = new Date(graphic.attributes.Date);
-			var localtimeDate = epochDate.toLocaleString();
+			var localtimeDate = epochDate.toLocaleDateString();
 			if (graphic.attributes.Your_Story && graphic.attributes.Your_Story.length > 0){
 			return "Shared On: " + localtimeDate;
 			}

@@ -121,10 +121,10 @@ $("body").click(function(e){
             var epochDate = new Date(graphic.attributes.Date);
             var localtimeDate = epochDate.toLocaleDateString();
             if (graphic.attributes.Your_Story && graphic.attributes.Your_Story.length > 0){
-                return "Shared On: " + localtimeDate;
+                return "Shared on: " + localtimeDate;
             }
             else {
-                return "Share Your Story: ";
+                return "Share your story: ";
             }
         };
         var featureLayerInfoTemplate = new InfoTemplate(infoTemplateTitle, infoTemplateContent);

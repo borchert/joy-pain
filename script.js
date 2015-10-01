@@ -180,13 +180,13 @@ $("body").click(function(e){
             lineJoySymbol = new SimpleLineSymbol(
                 SimpleLineSymbol.STYLE_SHORTDOT,
                 joyLineColor,
-                2
+                3
                 );
 
             linePainSymbol = new SimpleLineSymbol(
                 SimpleLineSymbol.STYLE_SHORTDOT,
                 painLineColor,
-                2
+                3
                 );
 
             var polygonRenderer = new UniqueValueRenderer(null, "Joy_Pain");

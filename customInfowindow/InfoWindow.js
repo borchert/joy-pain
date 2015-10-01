@@ -38,55 +38,7 @@ function(
         isContentShowing :false,
 
         constructor: function(parameters) {
-          lang.mixin(this, parameters);
-
-
-          domClass.add(this.domNode, "myInfoWindow");
-
-          this._closeButton = domConstruct.create("div",{"class": "close", "title": "Close"}, this.domNode);
-          this._title = domConstruct.create("div",{"class": "title"}, this.domNode);
-          this._content = domConstruct.create("div",{"class": "content"}, this.domNode);
-
-          this._toggleButton = domConstruct.create("div",{"class": "toggleOpen", "title": "Toggle"}, this.domNode);
-
-          var toggler = new  Toggler({
-            "node": this._content,
-            showFunc: coreFx.wipeIn,
-            hideFunc: coreFx.wipeOut
-          });
-          toggler.hide();
-
-          on(this._closeButton, "click", lang.hitch(this, function(){
-            //hide the content when the info window is toggled close.
-            this.hide();
-            if(this.isContentShowing){
-              toggler.hide();
-              this.isContentShowing = false;
-              domClass.remove(this._toggleButton);
-              domClass.add(this._toggleButton, "toggleOpen");
-            }
-          }));
-          on(this._toggleButton, "click", lang.hitch(this, function(){
-            //animate the content display
-              if(this.isContentShowing){
-
-                toggler.hide();
-                this.isContentShowing = false;
-                domClass.remove(this._toggleButton);
-                domClass.add(this._toggleButton,"toggleOpen");
-
-              }else{
-                toggler.show();
-                this.isContentShowing=true;
-                domClass.remove(this._toggleButton);
-                domClass.add(this._toggleButton,"toggleClose");
-              }
-
-          }));
-          //hide initial display
-          domUtils.hide(this.domNode);
-          this.isShowing = false;
-
+            return;
         },
         setMap: function(map){
           this.inherited(arguments);
@@ -100,11 +52,11 @@ function(
 
         },
         setTitle: function(title){
-            console.log("setTitle");
+            //console.log("setTitle");
             this._title = title;
         },
         setContent: function(content){
-            console.log("setContent");
+            //console.log("setContent");
             this._content = content;
             if (content.indexOf("textarea") !== -1){
                 this._showSaveButton = true;
@@ -151,9 +103,11 @@ function(
                 input: this._content,
                 buttons: this._buttons
             });
+            $(".vex-content").focus();
         },
         hide: function(){
             vex.close();
+            $("#map").focus();
             return;
         },
         resize: function(width, height){

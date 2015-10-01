@@ -246,11 +246,11 @@
 
 /* line 30, ../sass/vex.sass */
 .vex-overlay {
-  animation: vex-fadein 0.5s;
-  -webkit-animation: vex-fadein 0.5s;
-  -moz-animation: vex-fadein 0.5s;
-  -ms-animation: vex-fadein 0.5s;
-  -o-animation: vex-fadein 0.5s;
+  animation: vex-fadein 0.2s;
+  -webkit-animation: vex-fadein 0.2s;
+  -moz-animation: vex-fadein 0.2s;
+  -ms-animation: vex-fadein 0.2s;
+  -o-animation: vex-fadein 0.2s;
   -webkit-backface-visibility: hidden;
   position: fixed;
   background: rgba(0, 0, 0, 0.4);
@@ -261,31 +261,31 @@
 }
 /* line 39, ../sass/vex.sass */
 .vex.vex-closing .vex-overlay {
-  animation: vex-fadeout 0.5s;
-  -webkit-animation: vex-fadeout 0.5s;
-  -moz-animation: vex-fadeout 0.5s;
-  -ms-animation: vex-fadeout 0.5s;
-  -o-animation: vex-fadeout 0.5s;
+  animation: vex-fadeout 0.2s;
+  -webkit-animation: vex-fadeout 0.2s
+  -moz-animation: vex-fadeout 0.2s;
+  -ms-animation: vex-fadeout 0.2s;
+  -o-animation: vex-fadeout 0.2s;
   -webkit-backface-visibility: hidden;
 }
 
 /* line 42, ../sass/vex.sass */
 .vex-content {
-  animation: vex-fadein 0.5s;
-  -webkit-animation: vex-fadein 0.5s;
-  -moz-animation: vex-fadein 0.5s;
-  -ms-animation: vex-fadein 0.5s;
-  -o-animation: vex-fadein 0.5s;
+  animation: vex-fadein 0.2s;
+  -webkit-animation: vex-fadein 0.2s;
+  -moz-animation: vex-fadein 0.2s;
+  -ms-animation: vex-fadein 0.2s;
+  -o-animation: vex-fadein 0.2s;
   -webkit-backface-visibility: hidden;
   background: white;
 }
 /* line 46, ../sass/vex.sass */
 .vex.vex-closing .vex-content {
-  animation: vex-fadeout 0.5s;
-  -webkit-animation: vex-fadeout 0.5s;
-  -moz-animation: vex-fadeout 0.5s;
-  -ms-animation: vex-fadeout 0.5s;
-  -o-animation: vex-fadeout 0.5s;
+  animation: vex-fadeout 0.2s;
+  -webkit-animation: vex-fadeout 0.2s;
+  -moz-animation: vex-fadeout 0.2s;
+  -ms-animation: vex-fadeout 0.2s;
+  -o-animation: vex-fadeout 0.2s;
   -webkit-backface-visibility: hidden;
 }
 

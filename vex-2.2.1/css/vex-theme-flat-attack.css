@@ -236,11 +236,11 @@
 }
 /* line 38, ../sass/vex-theme-flat-attack.sass */
 .vex.vex-theme-flat-attack.vex-closing .vex-content {
-  animation: vex-flipout-horizontal 0.5s;
-  -webkit-animation: vex-flipout-horizontal 0.5s;
-  -moz-animation: vex-flipout-horizontal 0.5s;
-  -ms-animation: vex-flipout-horizontal 0.5s;
-  -o-animation: vex-flipout-horizontal 0.5s;
+  animation: vex-flipout-horizontal 0.2s;
+  -webkit-animation: vex-flipout-horizontal 0.2s;
+  -moz-animation: vex-flipout-horizontal 0.2s;
+  -ms-animation: vex-flipout-horizontal 0.2s;
+  -o-animation: vex-flipout-horizontal 0.2s;
   -webkit-backface-visibility: hidden;
 }
 /* line 41, ../sass/vex-theme-flat-attack.sass */
@@ -248,11 +248,11 @@
   -webkit-transform-style: preserve-3d;
   -moz-transform-style: preserve-3d;
   transform-style: preserve-3d;
-  animation: vex-flipin-horizontal 0.5s;
-  -webkit-animation: vex-flipin-horizontal 0.5s;
-  -moz-animation: vex-flipin-horizontal 0.5s;
-  -ms-animation: vex-flipin-horizontal 0.5s;
-  -o-animation: vex-flipin-horizontal 0.5s;
+  animation: vex-flipin-horizontal 0.25s;
+  -webkit-animation: vex-flipin-horizontal 0.25s;
+  -moz-animation: vex-flipin-horizontal 0.25s;
+  -ms-animation: vex-flipin-horizontal 0.25s;
+  -o-animation: vex-flipin-horizontal 0.25s;
   -webkit-backface-visibility: hidden;
 }
 /* line 45, ../sass/vex-theme-flat-attack.sass */

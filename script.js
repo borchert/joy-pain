@@ -62,6 +62,10 @@
         ) {
 
         parser.parse();
+		
+		joy_toggle_state = true;
+		$('#joy-pain-toggle-joy_label').addClass("joy-button-active");
+		$('#joy-pain-toggle-pain_label').addClass("joy-pain-button-inactive");
 
         var featureUrl = "http://services.arcgis.com/8df8p0NlLFEShl0r/ArcGIS/rest/services/Joy_Pain_Service/FeatureServer/";
         var basemapUrl = "http://${subDomain}.tiles.mapbox.com/v4/mmcfarlane83.lm01cdj5/${level}/${col}/${row}.png?" +
@@ -234,28 +238,34 @@
             if (!tool){
                 return;
             }
-
-            var joy_toggle_state = registry.byId("joy-pain-toggle-joy").checked;
-
+			
             if (joy_toggle_state === true){
 				pain_toolbar.deactivate();
                 joy_toolbar.activate(Draw[tool]);
             }
-            else {
-				joy_toolbar.deactivate();
-                pain_toolbar.activate(Draw[tool]);
-            }
-			
-			var pain_toggle_state = registry.byId("joy-pain-toggle-pain").checked;
-			
-			if (pain_toggle_state === true){
+	
+			else if (pain_toggle_state === true){
 				joy_toolbar.deactivate();
 				pain_toolbar.activate(Draw[tool]);
 			}
-			else {
-				pain_toolbar.deactivate();
-				joy_toolbar.activate(Draw[tool]);
-			}
+
+			/* toggleJoy = function(){
+				if (joy_toggle_state === true){
+					domClass.toggle('joy-pain-toggle-joy_label', 'joy-button-active');
+				}
+				else {
+					domClass.toggle('joy-pain-toggle-pain_label', 'pain-button-active');
+				}
+			};
+		
+			togglePain = function(){
+				if (pain_toggle_state === true){
+					domClass.toggle('joy-pain-toggle-pain_label', 'pain-button-active');
+				}
+				else {
+					domClass.toggle('joy-pain-toggle-joy_label', 'joy-button-active');
+				}
+			}; */
 
             map.hideZoomSlider();
         }
@@ -286,16 +296,47 @@
                 node.set('label', 'JOY');
             }
         }; */
-		
-		toggleJoyPain = function(){
-			domClass.toggle('joy-button-div', 'joy-pain-button-inactive');
+		toggleJoyPain = function(joy_or_pain){
+			
+			if (joy_or_pain === "joy"){
+				joy_toggle_state = true;
+				pain_toggle_state = false;
+				domClass.add('joy-pain-toggle-joy_label','joy-button-active');
+				domClass.remove('joy-pain-toggle-joy_label','joy-pain-button-inactive');
+				domClass.remove('joy-pain-toggle-pain_label','pain-button-active');
+				domClass.add('joy-pain-toggle-pain_label','joy-pain-button-inactive');
+			}
+			else {
+				pain_toggle_state = true;
+				joy_toggle_state = false;
+				domClass.add('joy-pain-toggle-pain_label','pain-button-active');
+				domClass.remove('joy-pain-toggle-pain_label','joy-pain-button-inactive');
+				domClass.remove('joy-pain-toggle-joy_label','joy-button-active');
+				domClass.add('joy-pain-toggle-joy_label','joy-pain-button-inactive');
+			}
+			
+			
+		};
+			
+		/* toggleJoy = function(){
+			if (joy_toggle_state === true){
+				domClass.toggle('joy-pain-toggle-joy_label', 'joy-button-active');
+			}
+			else {
+				domClass.toggle('joy-pain-toggle-pain_label', 'pain-button-active');
+			}
 		};
 		
-		/* toggleJoyPain = function(domClass, dom, on){
-				on(dom.byId("joy-button"), "click", function(){
-					domClass.toggle("joy-button-div", "joy-pain-button-inactive");
-				});
-			}; */
+		togglePain = function(){
+			if (pain_toggle_state === true){
+				domClass.toggle('joy-pain-toggle-pain_label', 'pain-button-active');
+			}
+			else {
+				domClass.toggle('joy-pain-toggle-joy_label', 'joy-button-active');
+			}
+		}
+		}; */
+		
 
         function createEventListeners(){
 
@@ -356,6 +397,7 @@
                 drawing = true;
                 storyFeature = null;
                 edit_toolbar.deactivate();
+				//pain_toolbar.deactivate();
 				var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new esri.Color([0,65,106]),2);
 				var fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, lineSymbol, new esri.Color([0,65,106,0.5]));
 				joy_toolbar.setLineSymbol(lineSymbol);
@@ -366,6 +408,7 @@
                 drawing = true;
                 storyFeature = null;
                 edit_toolbar.deactivate();
+				//joy_toolbar.deactivate();
 				var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new esri.Color([0,65,106]),2);
 				var fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, lineSymbol, new esri.Color([0,65,106,0.5]));
 				pain_toolbar.setLineSymbol(lineSymbol);

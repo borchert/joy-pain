@@ -121,9 +121,9 @@ function(
         },
 
         show: function(location){
-
+			var joy_or_pain = this.getJoyPain();
             if (this._showSaveButton){
-                var joy_or_pain = this.getJoyPain();
+            
 				vex.dialog.buttons.NO.text = "Skip";
                 this._buttons = [
                      vex.dialog.buttons.NO,
@@ -134,11 +134,16 @@ function(
                          click: function($vexContent, event) {
                              addStory(storyFeature);
                          }
-                 })
+						})
                  ];
             }
             else {
-                this._buttons = [vex.dialog.buttons.YES];
+                this._buttons = [                    
+					$.extend({}, vex.dialog.buttons.YES, {
+					 className: 'vex-dialog-button-save-' + joy_or_pain,
+					 text: 'OK'
+					})
+				];
             }
 
             vex.dialog.open({

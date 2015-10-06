@@ -84,7 +84,7 @@ background-color: #eee;
 }
 
 .infoTemplateContentRowItem {
-    line-height: 2em;
+    line-height: 0.5em;
     padding-left: 0.5em;
     vertical-align: middle;
 }

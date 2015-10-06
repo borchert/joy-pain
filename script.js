@@ -3,9 +3,6 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
   lineLayer, polygonLayer, joyFillColor, painFillColor,
   joyLineColor, painLineColor, drawingColor, polygonJoySymbol, polygonPainSymbol,
   lineJoySymbol, linePainSymbol, addStory, storyFeature;
-$("body").click(function(e){
-    console.log(e.target);
-});
 
   require([
     "customInfowindow/InfoWindow",
@@ -331,20 +328,7 @@ $("body").click(function(e){
                 hideDeleteButton();
             });
 
-            var deleteKeyPress = map.on("key-down",function(e){
 
-                if (e.which === 8){
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (edit_toolbar.getCurrentState().graphic === undefined){
-                        return;
-                    }
-                    else {
-                        deleteGraphic();
-                    }
-
-                }
-            });
 
             joy_toolbar.on("activate", function(e){
                 console.log("joy: draw starting");
@@ -439,6 +423,7 @@ $("body").click(function(e){
 
         storyFeature = graphic;
         map.infoWindow.setContent("<textarea id='story-text'></textarea><br/>");
+        map.infoWindow.setTitle("Share your story:")
         map.infoWindow.show();
 
     }

@@ -3,6 +3,10 @@ width:500px;
 height:500px;
 }
 
+.vex.vex-theme-flat-attack {
+  padding-top: 0px;
+}
+
 .vex.vex-theme-flat-attack .vex-dialog-button.vex-dialog-button-save-joy {
   background: #b18904;
   color: #fff; }
@@ -19,7 +23,16 @@ height:500px;
 
 .vex.vex-theme-flat-attack .vex-content {
 	background: rgba(255,255,255,0.6);
+  width:500px;
+  padding:1.5em 1.5em 2em 1.5em;
 }
+.vex.vex-theme-flat-attack .vex-dialog-form .vex-dialog-buttons { 
+  padding-top: 1em;
+  margin-bottom: -2em;
+  margin-left: -1.5em;
+  margin-right: -1.5em;
+}
+
 
 
 html, body, #mainWindow {

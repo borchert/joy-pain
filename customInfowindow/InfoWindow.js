@@ -99,6 +99,7 @@ function(
             }
 
             vex.dialog.open({
+                appendLocation: "#map",
                 message: this._title,
                 input: this._content,
                 buttons: this._buttons

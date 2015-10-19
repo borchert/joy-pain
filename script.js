@@ -177,13 +177,13 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
             lineJoySymbol = new SimpleLineSymbol(
                 SimpleLineSymbol.STYLE_SHORTDOT,
                 joyLineColor,
-                3
+                3.5
                 );
 
             linePainSymbol = new SimpleLineSymbol(
                 SimpleLineSymbol.STYLE_SHORTDOT,
                 painLineColor,
-                3
+                3.5
                 );
 
             var polygonRenderer = new UniqueValueRenderer(null, "Joy_Pain");

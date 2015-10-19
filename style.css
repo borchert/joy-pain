@@ -1,6 +1,6 @@
-#map {
-width:500px;
-height:500px;
+html, body, #map {
+  width:100%;
+  height:100%;
 }
 
 .vex.vex-theme-flat-attack {
@@ -58,7 +58,7 @@ html, body {
 #LocateButton {
     position: absolute;
     top: 95px;
-    left: 25px;
+    left: 20px;
     z-index: 50;
 }
 
@@ -68,15 +68,16 @@ html, body {
 
 /* override default locate button styling */
 #LocateButton .locateContainer .zoomLocateButton {
-padding:0px;
-transition: background-color 0.5s ease;
-background-color: rgba(255, 255, 255, 1);
-background-image: url("img/locate.png");
-border: 1px solid #57585A;
+  padding:0px;
+  transition: background-color 0.5s ease;
+  background-color: rgba(255, 255, 255, 1);
+  background-image: url("img/locate.png");
+  border: 1px solid #57585A;
 }
+
 #LocateButton .locateContainer .zoomLocateButton:hover {
-transition: background-color 0.5s ease;
-background-color: #eee;
+  transition: background-color 0.5s ease;
+  background-color: #eee;
 }
 
 #inner-editor {
@@ -91,8 +92,8 @@ background-color: #eee;
 
 #joy-pain-toggle-div {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 7px;
+  right: 7px;
   z-index: 50;
 }
 #draw-tools-div .dijitButton:hover span, #draw-tools-div .dijitButtonFocused span  {

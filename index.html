@@ -15,38 +15,36 @@
     <link rel="stylesheet" href="style.css" >
   </head>
   <body class="nihilo">
-
-      <div id="mainWindow" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline'">
-          <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
-              <div id="LocateButton"></div>
-              <div id="joy-pain-toggle-div">
+  
+    <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
+      <div id="LocateButton"></div>
+      <div id="joy-pain-toggle-div">
 				<div id="joy-pain-toggle-subdiv">
 				  <div id="joy-button-div">
-					<button id='joy-button' data-dojo-type="dijit/form/ToggleButton"
-					data-dojo-props="id:'joy-pain-toggle-joy', onChange: 	function(){toggleJoyPain('joy');}, checked: true">
-					JOY
-					</button>
+  					<button id='joy-button' data-dojo-type="dijit/form/ToggleButton"
+  					data-dojo-props="id:'joy-pain-toggle-joy', onChange: 	function(){toggleJoyPain('joy');}, checked: true">
+  					JOY
+  					</button>
 				  </div>
 				  <div id="pain-button-div">
-					<button id='pain-button' data-dojo-type="dijit/form/ToggleButton"
-					data-dojo-props="id:'joy-pain-toggle-pain', onChange: function(){toggleJoyPain('pain');}, checked: false">
-					PAIN
-					</button>
+  					<button id='pain-button' data-dojo-type="dijit/form/ToggleButton"
+  					data-dojo-props="id:'joy-pain-toggle-pain', onChange: function(){toggleJoyPain('pain');}, checked: false">
+  					PAIN
+  					</button>
 				  </div>
 				</div>
 
-                  <div id='draw-tools-div' data-dojo-type="dijit/layout/ContentPane">
-                      <button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Draw a Line</button>
-                      <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Create a Shape</button>
-                      <button data-tool-name="CIRCLE" data-dojo-type="dijit/form/Button">Place a Circle</button>
-                  </div>
-
-                  <button id="delete-sketch-button" style="visibility:hidden" data-dojo-type="dijit/form/Button"
-                  data-dojo-props="onClick:function(){deleteGraphic();}">
-                    <span class="fa fa-trash map-icon"></span>
-                  </button>
-              </div>
+        <div id='draw-tools-div' data-dojo-type="dijit/layout/ContentPane">
+          <button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Draw a Line</button>
+          <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Create a Shape</button>
+          <button data-tool-name="CIRCLE" data-dojo-type="dijit/form/Button">Place a Circle</button>
         </div>
+
+        <button id="delete-sketch-button" style="visibility:hidden" data-dojo-type="dijit/form/Button"
+        data-dojo-props="onClick:function(){deleteGraphic();}">
+          <span class="fa fa-trash map-icon"></span>
+        </button>
+      </div>
     </div>
 
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>

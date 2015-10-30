@@ -22,6 +22,8 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleFillSymbol",
     "esri/dijit/LocateButton",
+    "esri/tasks/query",
+    "esri/tasks/QueryTask",
     "dojo/parser",
     "dijit/registry",
     "dojo/dom-class",
@@ -54,6 +56,8 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
         SimpleLineSymbol,
         SimpleFillSymbol,
         LocateButton,
+        Query,
+        QueryTask,
         parser,
         registry,
         domClass,
@@ -301,6 +305,41 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
 
             lineLayer.on("click", activateEditing);
             polygonLayer.on("click", activateEditing);
+
+            var queryFeatureOverlap = function(e){
+
+                var executeQueryTask = function(e){
+                    var queryTask = new QueryTask(featureUrl + "1");
+                    var query = new Query();
+                    query.returnGeometry = true;
+                    query.spatialRelationship = Query.SPATIAL_REL_INTERSECTS;
+                    query.outFields = ["Date_", "Joy_Pain"];
+                    query.geometry = e.mapPoint;
+                    queryTask.execute(query, function(results){
+                        console.log("Query results shown below: ");
+                        console.log(results.features);
+                    });
+                   //console.log(query.geometry);
+                    //var infoTemplateQ = new InfoTemplate("${Date_}", "Date : ${Date_}<br/> Emotion : ${Joy_Pain}");
+                }
+                /*var showQueryResults = function(featureSet) {
+                    map.graphics.clear();
+                    var resultFeatures = featureSet.features;
+                    console.log("Let's do this!");
+                    console.log("Returned features : " + featureSet);*/
+                   /* for (var i=0, il=resultFeatures.length; i<il; i++) {
+                        var graphic = resultFeatures[i];
+                        graphic.setSymbol(symbol);
+                        graphic.setInfoTemplate(infoTemplate);
+                        map.graphics.add(graphic);
+                    }*/
+                //}
+                executeQueryTask(e);
+            }
+
+            polygonLayer.on("click", queryFeatureOverlap);
+            
+
 
             map.on("click", function(e){
                 if (!e.graphic){

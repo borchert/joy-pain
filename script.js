@@ -24,6 +24,7 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
     "esri/dijit/LocateButton",
     "esri/tasks/query",
     "esri/tasks/QueryTask",
+    //"esri/tasks/FeatureSet",
     "dojo/parser",
     "dijit/registry",
     "dojo/dom-class",
@@ -58,6 +59,7 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
         LocateButton,
         Query,
         QueryTask,
+        //FeatureSet,
         parser,
         registry,
         domClass,
@@ -316,8 +318,13 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
                     query.outFields = ["Date_", "Joy_Pain"];
                     query.geometry = e.mapPoint;
                     queryTask.execute(query, function(results){
-                        console.log("Query results shown below: ");
-                        console.log(results.features);
+
+                        var resultFeatures = results.features;
+                        console.log(resultFeatures.length + " features live here!");
+                        for (var i=0; i < resultFeatures.length; i++) {
+                            var graphic = resultFeatures[i];
+                            console.log(graphic.attributes);
+                        }
                     });
                    //console.log(query.geometry);
                     //var infoTemplateQ = new InfoTemplate("${Date_}", "Date : ${Date_}<br/> Emotion : ${Joy_Pain}");

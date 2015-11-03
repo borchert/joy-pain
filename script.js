@@ -2,7 +2,8 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
   hideDeleteButton, deleteGraphic, toggleJoyPain, maxExtent,
   lineLayer, polygonLayer, joyFillColor, painFillColor,
   joyLineColor, painLineColor, drawingColor, polygonJoySymbol, polygonPainSymbol,
-  lineJoySymbol, linePainSymbol, addStory, storyFeature;
+  lineJoySymbol, linePainSymbol, addStory, storyFeature, nullInfoWindow, 
+  buildInfoWindow, showInfoWindow, featurePicker;
 
   require([
     "customInfowindow/InfoWindow",
@@ -108,6 +109,24 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
         geoLocate.startup();
 
 
+        buildInfoWindow = function(graphic){
+            var content = infoTemplateContent(graphic);
+            var title = infoTemplateTitle(graphic);
+            map.infoWindow.setContent(content);
+            map.infoWindow.setTitle(title);
+        };
+
+        featurePicker = function(features){
+            var content = '';
+            var row_template = '<li class="row"><span class="feature-preview-geom">{{preview}}</span>';
+            for (var i = 0; i < features.length; i++){
+                content = content + row_template.replace("{{preview}}", features[i].attributes.GlobalID);
+            }
+            map.infoWindow.setContent(content);
+            map.infoWindow.setTitle("Which one?");
+            map.infoWindow.show();
+        }
+
         var infoTemplateContent = function(graphic){
             storyFeature = graphic;
             if (graphic.attributes.Your_Story && graphic.attributes.Your_Story.length > 0){
@@ -132,8 +151,16 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
         };
         var featureLayerInfoTemplate = new InfoTemplate(infoTemplateTitle, infoTemplateContent);
 
+        var htmlMap = { '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+        };
+
         addStory = function (feature) {
             var story_text = dom.byId("story-text").value;
+            story_text = escapeHTML(story_text);
 
             if (story_text.length > 1000){
                 alert("Exceeded maximum length, please shorten by at least " +
@@ -202,14 +229,14 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
 
             lineLayer = new FeatureLayer(featureUrl + "0",
             {
-                infoTemplate: featureLayerInfoTemplate,
+           //     infoTemplate: featureLayerInfoTemplate,
                  outFields: ["*"]
             });
             lineLayer.setRenderer(lineRenderer);
 
             polygonLayer = new FeatureLayer(featureUrl + "1",
             {
-                infoTemplate: featureLayerInfoTemplate,
+            //    infoTemplate: featureLayerInfoTemplate,
                  outFields: ["*"]
             });
             polygonLayer.setRenderer(polygonRenderer);
@@ -299,10 +326,26 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
         function createEventListeners(){
 
             var activateEditing = function(e){
-                if (!drawing) {
-                    edit_toolbar.activate(Edit.MOVE | Edit.SCALE | Edit.ROTATE, e.graphic);
-                    showDeleteButton();
-                }
+                queryFeatureOverlap(e).then(
+                    function(feature_set){
+                        if (feature_set.features.length === 1){
+                            if (!drawing) {
+                                edit_toolbar.activate(Edit.MOVE | Edit.SCALE | Edit.ROTATE, e.graphic);
+                                showDeleteButton();
+                            }
+                            buildInfoWindow(feature_set.features[0]);
+                            map.infoWindow.show();
+                        }
+                        else if (feature_set.features.length > 1){
+                            featurePicker(feature_set.features);
+                        }
+
+                    },
+                    function(){
+                        console.log("error");
+                    }
+                );
+                
             };
 
             lineLayer.on("click", activateEditing);
@@ -311,42 +354,22 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
             var queryFeatureOverlap = function(e){
 
                 var executeQueryTask = function(e){
-                    var queryTask = new QueryTask(featureUrl + "1");
+                    var queryTask = new QueryTask(e.graphic.getLayer().url);
                     var query = new Query();
                     query.returnGeometry = true;
+                    query.distance = 10;
                     query.spatialRelationship = Query.SPATIAL_REL_INTERSECTS;
-                    query.outFields = ["Date_", "Joy_Pain"];
+                    query.outFields = ["Date", "Joy_Pain", "Your_Story", "GlobalID"];
                     query.geometry = e.mapPoint;
-                    queryTask.execute(query, function(results){
+                    return queryTask.execute(query, function(results){
 
                         var resultFeatures = results.features;
                         console.log(resultFeatures.length + " features live here!");
-                        for (var i=0; i < resultFeatures.length; i++) {
-                            var graphic = resultFeatures[i];
-                            console.log(graphic.attributes);
-                        }
-                    });
-                   //console.log(query.geometry);
-                    //var infoTemplateQ = new InfoTemplate("${Date_}", "Date : ${Date_}<br/> Emotion : ${Joy_Pain}");
+                        return resultFeatures;
+                    });    
                 }
-                /*var showQueryResults = function(featureSet) {
-                    map.graphics.clear();
-                    var resultFeatures = featureSet.features;
-                    console.log("Let's do this!");
-                    console.log("Returned features : " + featureSet);*/
-                   /* for (var i=0, il=resultFeatures.length; i<il; i++) {
-                        var graphic = resultFeatures[i];
-                        graphic.setSymbol(symbol);
-                        graphic.setInfoTemplate(infoTemplate);
-                        map.graphics.add(graphic);
-                    }*/
-                //}
-                executeQueryTask(e);
+                return executeQueryTask(e);
             }
-
-            polygonLayer.on("click", queryFeatureOverlap);
-            
-
 
             map.on("click", function(e){
                 if (!e.graphic){
@@ -473,5 +496,11 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
         map.infoWindow.show();
 
     }
+
+    var escapeHTML = function(s,forAttribute){
+            return s.replace(forAttribute ? /[&<>'"]/g : /[&<>]/g, function(c) {
+                return htmlMap[c];
+            });
+    };
 
 });

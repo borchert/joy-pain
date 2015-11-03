@@ -35,11 +35,13 @@ function(
 ) {
     return declare([InfoWindowBase, Evented], {
 
+
         isContentShowing :false,
 
         constructor: function(parameters) {
             return;
         },
+
         setMap: function(map){
           this.inherited(arguments);
           map.on("pan-start", lang.hitch(this, function(){
@@ -55,7 +57,11 @@ function(
             //console.log("setTitle");
             this._title = title;
         },
+
+        
+
         setContent: function(content){
+
             //console.log("setContent");
             this._content = content;
             if (content.indexOf("textarea") !== -1){
@@ -69,7 +75,12 @@ function(
 
         //gets the joypain status of the clicked feature (global :/)
         getJoyPain: function(){
-            return storyFeature.attributes.Joy_Pain.toLowerCase();
+            if (storyFeature){
+                return storyFeature.attributes.Joy_Pain.toLowerCase();    
+            }
+            else {
+                return "joy";
+            }
         },
 
         show: function(location){
@@ -107,6 +118,7 @@ function(
             $(".vex-content").focus();
         },
         hide: function(){
+            this._content = this._title = null;
             vex.close();
             $("#map").focus();
             return;

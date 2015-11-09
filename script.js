@@ -3,7 +3,7 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
   lineLayer, polygonLayer, joyFillColor, painFillColor,
   joyLineColor, painLineColor, drawingColor, polygonJoySymbol, polygonPainSymbol,
   lineJoySymbol, linePainSymbol, addStory, storyFeature, nullInfoWindow, 
-  buildInfoWindow, showInfoWindow, featurePicker;
+  buildInfoWindow, showInfoWindow, featurePicker,queryFeatureOverlap, queried_feature_layer;
 
   require([
     "customInfowindow/InfoWindow",
@@ -120,7 +120,7 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
             var content = '';
             var row_template = '<li class="row"><span class="feature-preview-geom">{{preview}}</span>';
             for (var i = 0; i < features.length; i++){
-                content = content + row_template.replace("{{preview}}", features[i].attributes.GlobalID);
+                content = content + row_template.replace("{{preview}}", features[i].attributes.OBJECTID);
             }
             map.infoWindow.setContent(content);
             map.infoWindow.setTitle("Which one?");
@@ -210,13 +210,13 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
             lineJoySymbol = new SimpleLineSymbol(
                 SimpleLineSymbol.STYLE_SHORTDOT,
                 joyLineColor,
-                3.5
+                6.5
                 );
 
             linePainSymbol = new SimpleLineSymbol(
                 SimpleLineSymbol.STYLE_SHORTDOT,
                 painLineColor,
-                3.5
+                6.5
                 );
 
             var polygonRenderer = new UniqueValueRenderer(null, "Joy_Pain");
@@ -230,14 +230,16 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
             lineLayer = new FeatureLayer(featureUrl + "0",
             {
            //     infoTemplate: featureLayerInfoTemplate,
-                 outFields: ["*"]
+                 outFields: ["Date", "Joy_Pain", "Your_Story", "OBJECTID"],
+                 mode: FeatureLayer.MODE_SNAPSHOT
             });
             lineLayer.setRenderer(lineRenderer);
 
             polygonLayer = new FeatureLayer(featureUrl + "1",
             {
             //    infoTemplate: featureLayerInfoTemplate,
-                 outFields: ["*"]
+                 outFields: ["Date", "Joy_Pain", "Your_Story", "OBJECTID"],
+                 mode: FeatureLayer.MODE_SNAPSHOT
             });
             polygonLayer.setRenderer(polygonRenderer);
             map.addLayers([lineLayer, polygonLayer]);
@@ -322,24 +324,37 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
 			
 		};
 
+        get_features_from_layer_by_id = function(feature_layer, feature_ids){
+            var q = Query();
+            q.objectIds = feature_ids;
+            return feature_layer.queryFeatures(q, function(r){
+                return r.features;
+            })
+
+        };
 
         function createEventListeners(){
 
             var activateEditing = function(e){
                 queryFeatureOverlap(e).then(
-                    function(feature_set){
-                        if (feature_set.features.length === 1){
-                            if (!drawing) {
-                                edit_toolbar.activate(Edit.MOVE | Edit.SCALE | Edit.ROTATE, e.graphic);
-                                showDeleteButton();
-                            }
-                            buildInfoWindow(feature_set.features[0]);
-                            map.infoWindow.show();
-                        }
-                        else if (feature_set.features.length > 1){
-                            featurePicker(feature_set.features);
-                        }
+                    function(feature_ids){
+                        get_features_from_layer_by_id(queried_feature_layer, feature_ids).then(
+                            function(results){
+                                if (results.features.length === 1){
+                                    if (!drawing) {
+                                        edit_toolbar.activate(Edit.MOVE | Edit.SCALE | Edit.ROTATE, e.graphic);
+                                        showDeleteButton();
 
+                                    }
+                                    buildInfoWindow(results.features[0]);
+                                    map.infoWindow.show();
+                                    
+                                }
+                                else if (results.features.length > 1){
+                                    featurePicker(results.features);
+                                }
+                            }
+                        );
                     },
                     function(){
                         console.log("error");
@@ -351,21 +366,20 @@ var map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
             lineLayer.on("click", activateEditing);
             polygonLayer.on("click", activateEditing);
 
-            var queryFeatureOverlap = function(e){
+            queryFeatureOverlap = function(e){
 
                 var executeQueryTask = function(e){
-                    var queryTask = new QueryTask(e.graphic.getLayer().url);
+                    queried_feature_layer = e.graphic.getLayer();
                     var query = new Query();
                     query.returnGeometry = true;
-                    query.distance = 10;
+                    query.distance = 15;
+                    query.units = "meters";
                     query.spatialRelationship = Query.SPATIAL_REL_INTERSECTS;
-                    query.outFields = ["Date", "Joy_Pain", "Your_Story", "GlobalID"];
                     query.geometry = e.mapPoint;
-                    return queryTask.execute(query, function(results){
+                    return queried_feature_layer.queryIds(query, function(results){
 
-                        var resultFeatures = results.features;
-                        console.log(resultFeatures.length + " features live here!");
-                        return resultFeatures;
+                        console.log(results.length + " features live here!");
+                        return results;
                     });    
                 }
                 return executeQueryTask(e);

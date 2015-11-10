@@ -14,7 +14,6 @@ define([
     "dojo/Deferred",
     "esri/domUtils",
     "esri/InfoWindowBase"
-
 ],
 function(
     Evented,
@@ -43,14 +42,6 @@ function(
         },
 
         setMap: function(map){
-          this.inherited(arguments);
-          map.on("pan-start", lang.hitch(this, function(){
-            this.hide();
-          }));
-          map.on("zoom-start", lang.hitch(this, function(){
-            this.hide();
-          }));
-         // map.on("zoom-start", //this, this.hide);
 
         },
         setTitle: function(title){
@@ -83,8 +74,28 @@ function(
             }
         },
 
+        getAfterOpen: function(){
+            if (this._afteropen){
+                return this._afteropen;
+            }
+            else {
+                return null;
+            }
+        },
+
+        setAfterOpen: function(after_open){
+            if (after_open){
+                this._afteropen = after_open;
+            }
+            else {
+                this._afteropen = null;
+            }
+        },
+
         show: function(location){
 			var joy_or_pain = this.getJoyPain();
+            var that = this;
+            var afterOpen = this.getAfterOpen();
             if (this._showSaveButton){
             
 				vex.dialog.buttons.NO.text = "Skip";
@@ -110,9 +121,10 @@ function(
             }
 
             vex.dialog.open({
-                appendLocation: "#map",
+                appendLocation: "#joy-pain-map",
                 message: this._title,
                 input: this._content,
+                afterOpen: afterOpen,
                 buttons: this._buttons
             });
             $(".vex-content").focus();

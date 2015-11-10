@@ -44,17 +44,19 @@ body {
 .button {
      
     /*Step 2: Basic Button Styles*/
+    margin-top:20px;
     display: block;
-    height: 40px;
+    height: 50;
     width: 65px;
-    background: rgba(0,65,106,1);
+    background: rgba(0,65,106,.7);
     border: 1px solid rgba(255,255,255, .5);
      
     /*Step 3: Text Styles*/
     color: rgba(255, 255, 255, 1);
-    padding-top: 7px;
+ /*   padding-top: 4px;*/
+    padding:4px;
     text-align: center;
-    font: bold 15px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+    font: bold 12px "Bondoni MT", sans-serif;
      
     /*Step 4: Fancy CSS3 Styles*/
     border-radius: 50px;
@@ -66,11 +68,12 @@ a.button {
     text-decoration: none;
     position:center;
 }
-.inset{
+#inset{
 	text-align: left;
+	margin-top: -235px;
 }
 #usMap{
-	margin-top:;
+	margin-top:50px;
 	margin-left:-50%;
 }
 

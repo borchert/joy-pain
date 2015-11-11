@@ -1,13 +1,46 @@
-var joy_pain_map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
-  hideDeleteButton, deleteGraphic, toggleJoyPain, maxExtent,
-  lineLayer, polygonLayer, joyFillColor, painFillColor,
-  joyLineColor, painLineColor, drawingColor, polygonJoySymbol, polygonPainSymbol,
-  lineJoySymbol, linePainSymbol, addStory, storyFeature, nullInfoWindow, 
-  buildInfoWindow, showInfoWindow, featurePicker,queryFeatureOverlap, queried_feature_layer, 
-  highlight_symbol_line, highlight_symbol_polygon, activate_edit_toolbar, after_open,preview_maps = {};
+var jp = {},
+  joy_pain_map,
+  joy_toolbar,
+  pain_toolbar,
+  drawing,
+  showDeleteButton,
+  hideDeleteButton,
+  deleteGraphic,
+  toggleJoyPain,
+  maxExtent,
+  lineLayer,
+  polygonLayer,
+  joyFillColor,
+  painFillColor,
+  joyLineColor,
+  painLineColor,
+  drawingColor,
+  polygonJoySymbol,
+  polygonPainSymbol,
+  lineJoySymbol,
+  linePainSymbol,
+  addStory,
+  storyFeature,
+  nullInfoWindow,
+  buildInfoWindow,
+  showInfoWindow,
+  feature_picker,
+  queryFeatureOverlap,
+  queried_feature_layer,
+  highlight_symbol_line,
+  highlight_symbol_polygon,
+  activate_edit_toolbar,
+  point_to_extent,
+  get_features_from_click,
+  after_open,
+  preview_maps = {};
 
   require([
+    "dojo/_base/array",
     "customInfowindow/InfoWindow",
+    //"esri/basemaps",
+    //"esri/dijit/BasemapLayer",
+    //"esri/dijit/BasemapToggle",
     "esri/Color",
     "esri/tasks/query",    
     "esri/graphic",
@@ -42,7 +75,11 @@ var joy_pain_map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
     "dojo/domReady!"
 
     ], function(
+        array,
         InfoWindow,
+        //esriBasemaps,
+        //BasemapLayer,
+        //BasemapToggle,
         Color,
         Query,
         Graphic,
@@ -100,12 +137,40 @@ var joy_pain_map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
 
         //infoWindow.startup();
 
+        /*
+        var joy_pain_basemap = new BasemapLayer({
+            subDomains:["a","b","c","d"],
+            templateUrl: basemapUrl,
+            type: "WebTiledLayer",
+            copyright: "&copy;Mapbox"
+        });
+        
+        esriBasemaps.joy_pain = {
+
+          baseMapLayers: [joy_pain_basemap],
+          thumbnailUrl: "http://borchert.github.io/joy-pain/img/thumbnail.jpg",
+          title: "Joy/Pain"     
+        };
+        */
+
         joy_pain_map = new Map("joy-pain-map", {
+            //basemap: "joy_pain",
             center: [-93.17, 44.96],
             zoom: 12,
             infoWindow: infoWindow,
             minZoom:12
         });
+
+        
+        
+        /*
+        basemap_toggle = new BasemapToggle({
+            map: joy_pain_map,
+            basemaps: ["hybrid", esriBasemaps.joy_pain],
+            basemap: esriBasemaps.joy_pain
+          }, "BasemapToggle");
+        basemap_toggle.startup();
+        */
 
         var maxExtentParams = {
             "xmin":-10398523.528548198,
@@ -117,75 +182,89 @@ var joy_pain_map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
         maxExtent = Extent(maxExtentParams);
 
         after_open = function($vex_content){
-            var feature;
+            var features = joy_pain_map.infoWindow._afteropen_features;
+            var feature, feature_layer;
             var $map_divs = $vex_content.find("div[id^=\"preview-map\"]");
             $map_divs.each(function(a,div){
-                var obj = div.getAttribute("data-objectid");
-                get_features_from_layer_by_id(queried_feature_layer, [obj]).then(function(results){
-                    feature = results.features[0];
+                var obj = +div.getAttribute("data-objectid");
+                feature = array.filter(features, function(feature){
+                    if (feature.attributes.OBJECTID === obj){
+                        return feature;
+                    }
+                });
+                if (feature.length === 1){
+                    feature = feature[0];
+                }
+                else {
+                    console.log("could not identify single feature");                    
+                }
 
-                    var map_id = div.id;
-                    preview_maps[obj] = new Map(map_id, {
-                        slider:false, 
-                        nav:false,
-                        extent: feature._extent,
-                        logo: false
-                    });
-                    preview_maps[obj].on("load",function(e){
-                        e.map.disableMapNavigation();
-                    });
-                    
-                    preview_maps[obj].feature = feature;
+                //get_features_from_layer_by_id(queried_feature_layer, [obj]).then(function(results){
+                //feature = results.features[0];
 
-                    var gra = new GraphicsLayer();
-                    var fcopy = feature.toJson();
-                    var g = new Graphic(fcopy);
+                var map_id = div.id;
+                preview_maps[obj] = new Map(map_id, {
+                    slider:false, 
+                    nav:false,
+                    extent: feature._extent,
+                    logo: false
+                });
+                preview_maps[obj].on("load",function(e){
+                    e.map.disableMapNavigation();
+                });
+                
+                preview_maps[obj].feature = feature;
 
-                    if (feature.attributes.Joy_Pain === "Joy"){
-                        if (queried_feature_layer.name === "Polylines"){
-                            g.setSymbol(lineJoySymbol);
-                        }
-                        else {
-                            g.setSymbol(polygonJoySymbol);
-                        }
-                        
+                var gra = new GraphicsLayer();
+                var fcopy = feature.toJson();
+                var g = new Graphic(fcopy);
+                feature_layer = feature.getLayer();
+
+                if (feature.attributes.Joy_Pain === "Joy"){
+                    if (feature_layer.name === "Polylines"){
+                        g.setSymbol(lineJoySymbol);
                     }
                     else {
-                        if (queried_feature_layer.name === "Polylines"){
-                            g.setSymbol(linePainSymbol);
-                        }
-                        else {
-                            g.setSymbol(polygonPainSymbol);
-                        }
+                        g.setSymbol(polygonJoySymbol);
                     }
-                    gra.spatialReference = g.geometry.spatialReference;    
-                    gra.add(g);
-                    gra.on("click", function(e){
-                        joy_pain_map.graphics.remove(joy_pain_map.graphics.graphics[0]);
-                        vex.close();
-                        activate_edit_toolbar(preview_maps[e.graphic.attributes.OBJECTID].feature);
-                        buildInfoWindow(preview_maps[e.graphic.attributes.OBJECTID].feature);
-                        joy_pain_map.infoWindow.show();
-                    })
-
-                    gra.on("mouse-over", function(e){
                     
-                        var g = new Graphic(e.graphic.geometry);
-                        if (e.graphic.symbol.hasOwnProperty("outline")){
-                             g.setSymbol(highlight_symbol_polygon);
-                        }
-                        else {
-                            g.setSymbol(highlight_symbol_line);
-                        }
-                       
-                        joy_pain_map.graphics.add(g);
-                    });
-                    gra.on("mouse-out", function(e){
-                        joy_pain_map.graphics.remove(joy_pain_map.graphics.graphics[0]);
-                    });
-                    preview_maps[obj].addLayer(gra);
+                }
+                else {
+                    if (feature_layer.name === "Polylines"){
+                        g.setSymbol(linePainSymbol);
+                    }
+                    else {
+                        g.setSymbol(polygonPainSymbol);
+                    }
+                }
+                gra.spatialReference = g.geometry.spatialReference;    
+                gra.add(g);
+                gra.on("click", function(e){
+                    joy_pain_map.graphics.remove(joy_pain_map.graphics.graphics[0]);
+                    vex.close();
+                    activate_edit_toolbar(preview_maps[e.graphic.attributes.OBJECTID].feature);
+                    buildInfoWindow(preview_maps[e.graphic.attributes.OBJECTID].feature);
+                    joy_pain_map.infoWindow.show();
+                })
 
+                gra.on("mouse-over", function(e){
+                
+                    var g = new Graphic(e.graphic.geometry);
+                    if (e.graphic.symbol.hasOwnProperty("outline")){
+                         g.setSymbol(highlight_symbol_polygon);
+                    }
+                    else {
+                        g.setSymbol(highlight_symbol_line);
+                    }
+                   
+                    joy_pain_map.graphics.add(g);
                 });
+                gra.on("mouse-out", function(e){
+                    joy_pain_map.graphics.remove(joy_pain_map.graphics.graphics[0]);
+                });
+                preview_maps[obj].addLayer(gra);
+
+                //});
                
                 
             })
@@ -204,7 +283,7 @@ var joy_pain_map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
             joy_pain_map.infoWindow.setTitle(title);
         };
 
-        featurePicker = function(features){
+        feature_picker = function(features){
             edit_toolbar.deactivate();
             var content = '', m;
             var row_template = '<li class="row"><span class="feature-preview-geom">{{preview}}</span>';
@@ -215,7 +294,7 @@ var joy_pain_map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
             }
             joy_pain_map.infoWindow.setContent(content);
             joy_pain_map.infoWindow.setTitle("Which one?");
-            joy_pain_map.infoWindow.setAfterOpen(after_open);
+            joy_pain_map.infoWindow.setAfterOpen(after_open, features);
             joy_pain_map.infoWindow.show();
         }
 
@@ -249,6 +328,31 @@ var joy_pain_map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
                     '"': '&quot;',
                     "'": '&#39;'
         };
+
+        get_features_from_click = function(click_extent){
+            var filtered_graphics_lines = array.filter(lineLayer.graphics, function(graphic) {
+                return click_extent.intersects(graphic.geometry);
+            });
+            var filtered_graphics_poly = array.filter(polygonLayer.graphics, function(graphic) {
+                return click_extent.intersects(graphic.geometry);
+            });
+
+            return filtered_graphics_lines.concat(filtered_graphics_poly);
+        }
+
+        point_to_extent = function(map, point, toleranceInPixel) {
+            //from http://blogs.esri.com/esri/arcgis/2010/02/08/find-graphics-under-a-mouse-click-with-the-arcgis-api-for-javascript/
+          //calculate map coords represented per pixel
+          var pixelWidth = map.extent.getWidth() / map.width;
+          //calculate map coords for tolerance in pixel
+          var toleraceInMapCoords = toleranceInPixel * pixelWidth;
+          //calculate & return computed extent
+          return new esri.geometry.Extent( point.x - toleraceInMapCoords,
+                       point.y - toleraceInMapCoords,
+                       point.x + toleraceInMapCoords,
+                       point.y + toleraceInMapCoords,
+                       map.spatialReference );
+        }
 
         addStory = function (feature) {
             var story_text = dom.byId("story-text").value;
@@ -433,6 +537,24 @@ var joy_pain_map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
         function createEventListeners(){
 
             var activateEditing = function(e){
+                var features = queryFeatureOverlap(e);
+                if (features.length === 1){
+                    if (!drawing) {
+                        activate_edit_toolbar(features[0]);
+                    }
+                    buildInfoWindow(features[0]);
+                    joy_pain_map.infoWindow.show();
+                    
+                }
+                else if (features.length > 1){
+                    feature_picker(features);
+                }
+                else {
+                    edit_toolbar.deactivate();
+                    hideDeleteButton();
+                    joy_pain_map.infoWindow.hide();
+                }
+                /*
                 queryFeatureOverlap(e).then(
                     function(feature_ids){
                         get_features_from_layer_by_id(queried_feature_layer, feature_ids).then(
@@ -446,7 +568,7 @@ var joy_pain_map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
                                     
                                 }
                                 else if (results.features.length > 1){
-                                    featurePicker(results.features);
+                                    feature_picker(results.features);
                                 }
                             }
                         );
@@ -455,15 +577,22 @@ var joy_pain_map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
                         console.log("error");
                     }
                 );
-                
+                */
             };
-
+            /*
             lineLayer.on("click", activateEditing);
             polygonLayer.on("click", activateEditing);
+            */
+            joy_pain_map.on("click", activateEditing);
 
             queryFeatureOverlap = function(e){
+                var ext = point_to_extent(joy_pain_map, e.mapPoint, 10);
+                var features = get_features_from_click(ext);
+                return features;
+                /*var executeQuery = function(e){
 
-                var executeQuery = function(e){
+                    //TODO replace with purely client side version
+                    //from http://blogs.esri.com/esri/arcgis/2010/02/08/find-graphics-under-a-mouse-click-with-the-arcgis-api-for-javascript/
                     queried_feature_layer = e.graphic.getLayer();
                     var query = new Query();
                     query.returnGeometry = true;
@@ -477,16 +606,12 @@ var joy_pain_map, joy_toolbar, pain_toolbar, drawing, showDeleteButton,
                         return results;
                     });    
                 }
-                return executeQuery(e);
+                return executeQuery(e);*/
             }
 
-            joy_pain_map.on("click", function(e){
-                if (!e.graphic){
-                    edit_toolbar.deactivate();
-                    hideDeleteButton();
-                    joy_pain_map.infoWindow.hide();
-                }
-            });
+            
+     
+          
 
             joy_pain_map.on("extent-change", function(e){
 

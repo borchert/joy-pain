@@ -83,9 +83,10 @@ function(
             }
         },
 
-        setAfterOpen: function(after_open){
+        setAfterOpen: function(after_open, features){
             if (after_open){
                 this._afteropen = after_open;
+                this._afteropen_features = features;
             }
             else {
                 this._afteropen = null;

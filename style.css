@@ -3,6 +3,13 @@ html, body, #joy-pain-map {
   height:100%;
 }
 
+#BasemapToggle {
+  position: absolute;
+  top: 60px;
+  left: 20px;
+  z-index: 50;
+}
+
 .vex.vex-theme-flat-attack {
   padding-top: 0px;
 }

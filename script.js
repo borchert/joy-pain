@@ -173,10 +173,10 @@ var jp = {},
         */
 
         var maxExtentParams = {
-            "xmin":-10398523.528548198,
-            "ymin":5603665.400915724,
-            "xmax":-10354071.866091402,
-            "ymax":5629615.772018506,
+            "xmin":-10418523.528548198,
+            "ymin":5588665.400915724,
+            "xmax":-10334071.866091402,
+            "ymax":5643615.772018506,
             "spatialReference":{"wkid":102100}
         };
         maxExtent = Extent(maxExtentParams);
@@ -347,7 +347,7 @@ var jp = {},
           //calculate map coords for tolerance in pixel
           var toleraceInMapCoords = toleranceInPixel * pixelWidth;
           //calculate & return computed extent
-          return new Extent( point.x - toleraceInMapCoords,
+          return new esri.geometry.Extent( point.x - toleraceInMapCoords,
                        point.y - toleraceInMapCoords,
                        point.x + toleraceInMapCoords,
                        point.y + toleraceInMapCoords,

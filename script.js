@@ -347,7 +347,7 @@ var jp = {},
           //calculate map coords for tolerance in pixel
           var toleraceInMapCoords = toleranceInPixel * pixelWidth;
           //calculate & return computed extent
-          return new esri.geometry.Extent( point.x - toleraceInMapCoords,
+          return new Extent( point.x - toleraceInMapCoords,
                        point.y - toleraceInMapCoords,
                        point.x + toleraceInMapCoords,
                        point.y + toleraceInMapCoords,

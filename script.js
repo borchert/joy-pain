@@ -158,6 +158,7 @@ var jp = {},
             center: [-93.17, 44.96],
             zoom: 12,
             infoWindow: infoWindow,
+            smartNavigation: false,
             minZoom:12
         });
 
@@ -173,10 +174,10 @@ var jp = {},
         */
 
         var maxExtentParams = {
-            "xmin":-10398523.528548198,
-            "ymin":5603665.400915724,
-            "xmax":-10354071.866091402,
-            "ymax":5629615.772018506,
+            "xmin":-10408523.528548198,
+            "ymin":5588665.400915724,
+            "xmax":-10330071.866091402,
+            "ymax":5643615.772018506,
             "spatialReference":{"wkid":102100}
         };
         maxExtent = Extent(maxExtentParams);

@@ -64,6 +64,15 @@ function(
             }
         },
 
+        setClass: function(class_name){
+            this._class = class_name;
+        },
+
+        getClass: function(){
+            return this._class;
+        },
+
+
         //gets the joypain status of the clicked feature (global :/)
         getJoyPain: function(){
             if (storyFeature){
@@ -95,8 +104,8 @@ function(
 
         show: function(location){
 			var joy_or_pain = this.getJoyPain();
-            var that = this;
             var afterOpen = this.getAfterOpen();
+            var class_name = this.getClass();
             if (this._showSaveButton){
             
 				vex.dialog.buttons.NO.text = "Skip";
@@ -121,9 +130,11 @@ function(
 				];
             }
 
+
             vex.dialog.open({
                 appendLocation: "#joy-pain-map",
                 message: this._title,
+                className: class_name,
                 input: this._content,
                 afterOpen: afterOpen,
                 buttons: this._buttons

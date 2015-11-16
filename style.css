@@ -93,6 +93,17 @@ div[id^="preview-map"]{
   border: 1px solid #57585A;
 }
 
+.vex.vex-theme-flat-attack.dialog-feature-picker .vex-dialog-form .vex-dialog-input,
+.vex.vex-theme-flat-attack.dialog-with-story .vex-dialog-form .vex-dialog-input {
+    max-height: 250px;
+    overflow: auto;
+}
+
+.vex.vex-theme-flat-attack.dialog-feature-picker .vex-dialog-input,
+.vex.vex-theme-flat-attack.dialog-with-story .vex-dialog-input{
+  background-color: rgba(255,255,255,0.3);
+}
+
 #LocateButton .locateContainer .zoomLocateButton:hover {
   transition: background-color 0.5s ease;
   background-color: #eee;

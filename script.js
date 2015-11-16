@@ -280,6 +280,9 @@ var jp = {},
         buildInfoWindow = function(graphic){
             var content = infoTemplateContent(graphic);
             var title = infoTemplateTitle(graphic);
+            var class_name;
+            title === "Share your story: " ? class_name = "vex-theme-flat-attack dialog-empty" : class_name = "vex-theme-flat-attack dialog-with-story";
+            joy_pain_map.infoWindow.setClass(class_name);
             joy_pain_map.infoWindow.setContent(content);
             joy_pain_map.infoWindow.setTitle(title);
         };
@@ -295,6 +298,7 @@ var jp = {},
             }
             joy_pain_map.infoWindow.setContent(content);
             joy_pain_map.infoWindow.setTitle("Which one?");
+            joy_pain_map.infoWindow.setClass("vex-theme-flat-attack dialog-feature-picker");
             joy_pain_map.infoWindow.setAfterOpen(after_open, features);
             joy_pain_map.infoWindow.show();
         }

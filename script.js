@@ -730,8 +730,7 @@ var jp = {},
         }
 
         storyFeature = graphic;
-        joy_pain_map.infoWindow.setContent("<textarea id='story-text'></textarea><br/>");
-        joy_pain_map.infoWindow.setTitle("Share your story:")
+        buildInfoWindow(graphic);
         joy_pain_map.infoWindow.show();
 
     }

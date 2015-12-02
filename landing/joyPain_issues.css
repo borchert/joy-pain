@@ -6,7 +6,7 @@ body {
 #background{
     background-image: url("LandingPagePhotos/IMG_0355.jpg");
     margin-top: 0px;
-    margin-bottom: 0px;
+    margin-bottom; 0px;
     background-color: #cccccc;
     display: block;
     position: absolute;
@@ -17,7 +17,7 @@ body {
     z-index: -1;
     opacity: 0.4;
     background-repeat: no-repeat;
-    /*background-position: 50% 0;*/
+    background-position: 50% 0;
     -ms-background-size: cover;
     -o-background-size: cover;
     -moz-background-size: cover;
@@ -44,9 +44,8 @@ body {
 .button {
      
     /*Step 2: Basic Button Styles*/
-    margin-top:20px;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: 0;
+    margin-right:0;
     display: block;
     height: 50;
     width: 65px;
@@ -64,70 +63,72 @@ body {
     border-radius: 50px;
     }
 
+  
 /*Step 3: Link Styling*/
 a.button {
     text-decoration: none;
     position:center;
 }
 #inset{
-	text-align: center;
-    padding-top:20px;
-	/*margin-top: -235px;*/
+	text-align: left;
+	margin-top: -235px;
 }
 #usMap{
-	/*margin-top:50px;
-	margin-left:-50%;*/
-    width: 100%;
-    height: auto;
-    display:block;
-    padding-top:20px;
+	margin-left: 0;
+	margin-right: 0;
 }
 
 #mapOriginal{
 	margin-top:10%;
-	height:100%;
-	width:100%;
+	height:700px;
+	width:900px;
+	
 }
-
-#mapOriginalVertical{
-    height:100%;
-    width:100%;
-}
-
 .mapSH{
 	margin-left:7%;
 }
 
-.bubbles img{
-    display: block;
-	margin-left: auto;
-    margin-right: auto;
-    margin-top: 5%;
-    margin-bottom: 7%;
-    height:150px;
-    width:150px;
-    border-radius: 50%;
-    border: 2px solid #b18904;
+.bubbles{
+	padding-left:50%;
 }
 
-.bubblesSmall img{
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 15%;
-    height:150px;
-    width:150px;
-    border-radius: 50%;
-    border: 2px solid #b18904;
-}
-/*to shift vertical image bubbles down*/
 #image_1{
-    margin-top:40%;
+
+	margin-top: 20%;
+	height:150px;
+	width:150px;
+	border-radius: 50%;
+    border: 2px solid #b18904;
+
+}
+#image_2{
+	margin-top:20%;
+	height:150px;
+	width:150px;
+	border-radius:50%;
+	border: 2px solid #b18904;
+
+
+}
+#image_3{
+	margin-top:20%;
+	height:150px;
+	width:150px;
+	border-radius:50%;
+	border: 2px solid #b18904;
 
 }
 
-/* to make sure the bubble is not affected by the margin assigned for the larger screens..
- MAKE SURE MATCHES bubblesSmall martin-top*/
-#image_1_sm{
-    margin-top:15%;
+.img-responsive {
+width:100%;
+ display: block;
+ height: auto;
+ max-width: 100%;
+}
+
+/* Class*/
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }

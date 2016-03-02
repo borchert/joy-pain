@@ -1,0 +1,189 @@
+html, body, #joy-pain-map {
+  width:100%;
+  height:100%;
+}
+
+#BasemapToggle {
+  position: absolute;
+  top: 60px;
+  left: 20px;
+  z-index: 50;
+}
+
+.vex.vex-theme-flat-attack {
+  padding-top: 0px;
+}
+
+.vex.vex-theme-flat-attack .vex-dialog-button.vex-dialog-button-save-joy {
+  background: #b18904;
+  color: #fff; }
+.vex.vex-theme-flat-attack .vex-dialog-button.vex-dialog-button-save-pain {
+  background: #545454;
+  color: #fff; }
+
+.vex.vex-theme-flat-attack .vex-dialog-button.vex-dialog-button-save-joy:hover {
+    background: #b18904;
+}
+.vex.vex-theme-flat-attack .vex-dialog-button.vex-dialog-button-save-pain:hover {
+    background: #545454;
+}
+
+.vex.vex-theme-flat-attack .vex-content {
+	background: rgba(255,255,255,0.6);
+  width:500px;
+  padding:1.5em 1.5em 2em 1.5em;
+}
+.vex.vex-theme-flat-attack .vex-dialog-form .vex-dialog-buttons { 
+  padding-top: 1em;
+  margin-bottom: -2em;
+  margin-left: -1.5em;
+  margin-right: -1.5em;
+}
+
+
+
+html, body, #mainWindow {
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #4C4C4C;
+    height: 100%;
+    width: 100%;
+}
+
+#storyDisplay {
+	max-width:200px;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+li.row {
+  list-style-type: none;
+  padding-top:10px;
+  padding-bottom:10px;
+}
+
+#header {
+    height: 80px;
+    overflow: auto;
+    padding: 0.5em;
+}
+#LocateButton {
+    position: absolute;
+    top: 95px;
+    left: 20px;
+    z-index: 50;
+}
+
+#joy-pain-map span.fa.map-icon {
+    font-size: 1.4em;
+}
+
+div[id^="preview-map"]{
+  height:100px;
+  width:100px;
+}
+
+/* override default locate button styling */
+#LocateButton .locateContainer .zoomLocateButton {
+  padding:0px;
+  transition: background-color 0.5s ease;
+  background-color: rgba(255, 255, 255, 1);
+  background-image: url("img/locate.png");
+  border: 1px solid #57585A;
+}
+
+.vex.vex-theme-flat-attack.dialog-feature-picker .vex-dialog-form .vex-dialog-input,
+.vex.vex-theme-flat-attack.dialog-with-story .vex-dialog-form .vex-dialog-input {
+    max-height: 250px;
+    overflow: auto;
+}
+
+.vex.vex-theme-flat-attack.dialog-feature-picker .vex-dialog-input,
+.vex.vex-theme-flat-attack.dialog-with-story .vex-dialog-input{
+  background-color: rgba(255,255,255,0.3);
+}
+
+#LocateButton .locateContainer .zoomLocateButton:hover {
+  transition: background-color 0.5s ease;
+  background-color: #eee;
+}
+
+#inner-editor {
+    width: 12.5em;
+}
+
+.infoTemplateContentRowItem {
+    line-height: 0.5em;
+    padding-left: 0.5em;
+    vertical-align: middle;
+}
+
+#joy-pain-toggle-div {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 50;
+}
+#draw-tools-div .dijitButton:hover span, #draw-tools-div .dijitButtonFocused span  {
+    transition: background-color 0.5s ease;
+    background-color: #eee;
+}
+
+#draw-tools-div span {
+    display:block;
+}
+#draw-tools-div .dijitButton span {
+    transition: background-color 0.5s ease;
+    background-color: rgba(255, 255, 255, 1);
+
+}
+#draw-tools-div .dijitButtonNode {
+
+    border: 1px solid #57585A;
+    padding: 1px 2px;
+
+}
+
+
+
+#joy-pain-toggle-div .dijitToggleButton .dijitButtonText{
+padding: 4px 8px;
+}
+
+#joy-button-div, #pain-button-div {
+display: inline;
+}
+
+#joy-pain-toggle-subdiv
+
+#joy-pain-toggle-div .dijitToggleButton{
+width:65%;
+}
+
+#pain-button-div .dijitToggleButton span {
+border-radius: 50px;
+transition: background-color 1s ease,
+            width 1s ease;
+}
+
+#joy-button-div .dijitToggleButton span {
+border-radius: 50px;
+transition: background-color 1s ease,
+            width 1s ease;
+}
+
+.joy-button-active {
+	background-color:#b18904;
+	color:white;
+}
+
+.pain-button-active {
+	background-color:#545454;
+	color:white;
+}
+
+.joy-pain-button-inactive {
+	background-color: white;
+	color: #2A2A2A;
+}

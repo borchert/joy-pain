@@ -1,72 +1,133 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-  	<meta name="apple-mobile-web-app-capable" content="yes">
-  	<meta name="apple-mobile-web-app-status-bar-style" content="translucent-black">
-  	<meta name='viewport' content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <title>Joy & Pain Map</title>
-  	<link rel="stylesheet" href="//js.arcgis.com/3.12/esri/css/esri.css">
-  	<link rel="stylesheet" href="//js.arcgis.com/3.12/dijit/themes/nihilo/nihilo.css">
-    <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="vex-2.3.3/css/vex.css" />
-    <link rel="stylesheet" href="vex-2.3.3/css/vex-theme-flat-attack.css" />
-    <link rel="stylesheet" href="style.css" >
-  </head>
-  <body class="nihilo">
-  
-    <div id="joy-pain-map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
-      <div id="LocateButton"></div>
-      <div id="BasemapToggle"></div>
-      <div id="joy-pain-toggle-div">
-				<div id="joy-pain-toggle-subdiv">
-				  <div id="joy-button-div">
-  					<button id='joy-button' data-dojo-type="dijit/form/ToggleButton"
-  					data-dojo-props="id:'joy-pain-toggle-joy', onChange: 	function(){toggleJoyPain('joy');}, checked: true">
-  					JOY
-  					</button>
-				  </div>
-				  <div id="pain-button-div">
-  					<button id='pain-button' data-dojo-type="dijit/form/ToggleButton"
-  					data-dojo-props="id:'joy-pain-toggle-pain', onChange: function(){toggleJoyPain('pain');}, checked: false">
-  					PAIN
-  					</button>
-				  </div>
-				</div>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS  -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="landing.css"/>
+    <title>The Mapping of Joy and Pain</title>
+</head>
 
-        <div id='draw-tools-div' data-dojo-type="dijit/layout/ContentPane">
-          <button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Draw a Line</button>
-          <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Create a Shape</button>
-          <button data-tool-name="CIRCLE" data-dojo-type="dijit/form/Button">Place a Circle</button>
+<body>
+    <div id="background"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="title">
+                            the mapping of <br/><span style="font-weight: bold; color: #b18904;">joy</span> and <span style="font-weight: bold; color: #545454;">pain</span>
+                        </div>
+                        <div class="author">
+                            A Project By <a href="www.rebeccakrinke.com">Rebecca Krinke</a> and the <a href="https://www.lib.umn.edu/borchert">John R. Borchert Map Library</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="text">
+                            <a href="www.rebeccakrinke.com/Projects/Unseen-Seen-The-Mapping-of-Joy-and-Pain"<i>Unseen/Seen: The Mapping of Joy and Pain</i></a> was a temporary work of public,
+                            participatory art created by <a href="www.rebeccakrinke.com">Rebecca Krinke</a> in 2010. The
+                            project traveled to Minneapolis and St. Paul parks and
+                            invited the public to map where they experienced joy and
+                            pain, challenging conventional ways of seeing these
+                            cities.<br>
+                            <br>
+                            In 2015, The Borchert Map Library team created a new
+                            digital and interactive version of the map - one that uses
+                            the same ideas of mapping gold for joy and gray for pain.
+                            Click the button to add your experiences to the map.
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-offset-4 col-md-4 col-sm-offset-4 col-sm-4">
+                        <a class="button" href="map">
+                            Enter Map
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" id="inset">
+                        Mapping in Minneapolis and St. Paul, Minnesota, USA
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-10 col-sm-offset-2 col-sm-8">
+                        <img alt="mapUS" id="usMap" src="images/MN_inset_cropped.png" class="img-responsive">
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- Medium and large screen map -->
+            <div class="col-lg-7 col-md-5 visible-md visible-lg">
+                <a href="map"><img alt="MapJoyPain2" id="mapOriginal" src="images/MapJoyPain2.png" class="img-responsive"/></a>
+                <div class="mapSH">
+                    The Original Map of Joy and Pain from 2010
+                </div>
+            </div>
+
+            <!-- Medium and large screen bubbles -->
+            <div class="col-lg-2 col-md-2 visible-md visible-lg" id="row bubbles">
+                <div class="row bubbles">
+                    <img alt="paing_joy" id="image_1" src="images/3_KRINKEpain_joyhands.JPG" class="img-responsive">
+                </div>
+                <div class="row bubbles">
+                    <img alt="map" id="image_2" src="images/map.JPG" class="img-responsive">
+                </div>
+                <div class="row bubbles">
+                    <img alt="Mountain View" id="image_3" src="images/KRINKE_MAPoverall_environ.JPG" class="img-responsive">
+                </div>
+            </div>
         </div>
 
-        <button id="delete-sketch-button" style="visibility:hidden" data-dojo-type="dijit/form/Button"
-        data-dojo-props="onClick:function(){deleteGraphic();}">
-          <span class="fa fa-trash map-icon"></span>
-        </button>
-      </div>
+        <!-- Vertical alignment -->
+        <div class="row">
+            <div class="col-sm-12 visible-sm visible-xs">
+                <img alt="MapJoyPain2" id="mapOriginalVertical" src="images/MapJoyPain2.png">
+                <div class="mapSH">
+                    The Original Map of Joy and Pain from 2010
+                </div>
+            </div>
+        </div>
+
+        <!-- Horizontal bubbles -->
+        <div class="bubblesSmall">
+            <div class="col-sm-4 visible-sm visible-xs">
+                <img alt="pain_joy" id="image_1_sm" src="images/3_KRINKEpain_joyhands.JPG" class="img-responsive">
+            </div>
+            <div class="col-sm-4 visible-sm visible-xs">
+                <img alt="map" id="image_2" src="images/map.JPG" class="img-responsive">
+            </div>
+            <div class="col-sm-4 visible-sm visible-xs">
+                <img alt="Mountain View" id="image_3" src="images/KRINKE_MAPoverall_environ.JPG" class="img-responsive">
+            </div>
+        </div>
+
+
+        <!-- Vertical bubbles -->
+        <!-- <div class="row">
+            <div class="col-sm-12 visible-sm visible-xs">
+                <div class="row bubbles">
+                    <img alt="paing_joy" id="image_1" src="3_KRINKEpain_joyhands.JPG">
+                </div>
+                <div class="row bubbles">
+                    <img alt="map" id="image_2" src="map.JPG">
+                </div>
+                <div class="row bubbles">
+                    <img alt="Mountain View" id="image_3" src="KRINKE_MAPoverall_environ.JPG">
+                </div>
+            </div>
+        </div> -->
+
     </div>
 
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="vex-2.3.3/js/vex.combined.min.js"></script>
-    <script>vex.defaultOptions.className = 'vex-theme-flat-attack';</script>
-    <script>
-        var dojoConfig = {
-            parseOnLoad:false,
-            packages: [{
-              "name": "customInfowindow",
-              "location": location.pathname.replace(/\/[^/]+$/, "") + "customInfowindow"
-          }]
-        };
-    </script>
-    <script src="//js.arcgis.com/3.12compact/"></script>
-  	<script type="text/javascript" src="script.js"></script>
-     <!--U Libraries Google Analytics -->
-    <script type="text/javascript">
-      <!--//--><![CDATA[//><!--
-      var _gaq = _gaq || [];_gaq.push(["_setAccount", "UA-20973358-1"]);_gaq.push(["_gat._anonymizeIp"]);_gaq.push(['_setCampaignCookieTimeout', 1209600000]);_gaq.push(["_trackPageview"]);(function() {var ga = document.createElement("script");ga.type = "text/javascript";ga.async = true;ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(ga, s);})();
-      //--><!]]>
-    </script> 
-  </body>
+</body>
 </html>

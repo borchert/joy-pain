@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+  	<meta name="apple-mobile-web-app-capable" content="yes">
+  	<meta name="apple-mobile-web-app-status-bar-style" content="translucent-black">
+  	<meta name='viewport' content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>Joy & Pain Map</title>
+  	<link rel="stylesheet" href="//js.arcgis.com/3.12/esri/css/esri.css">
+  	<link rel="stylesheet" href="//js.arcgis.com/3.12/dijit/themes/nihilo/nihilo.css">
+    <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../vex-2.3.3/css/vex.css" />
+    <link rel="stylesheet" href="../vex-2.3.3/css/vex-theme-flat-attack.css" />
+    <link rel="stylesheet" href="style.css" >
+  </head>
+  <body class="nihilo">
+  
+    <div id="joy-pain-map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
+      <div id="LocateButton"></div>
+      <div id="BasemapToggle"></div>
+      <div id="joy-pain-toggle-div">
+				<div id="joy-pain-toggle-subdiv">
+				  <div id="joy-button-div">
+  					<button id='joy-button' data-dojo-type="dijit/form/ToggleButton"
+  					data-dojo-props="id:'joy-pain-toggle-joy', onChange: 	function(){toggleJoyPain('joy');}, checked: true">
+  					JOY
+  					</button>
+				  </div>
+				  <div id="pain-button-div">
+  					<button id='pain-button' data-dojo-type="dijit/form/ToggleButton"
+  					data-dojo-props="id:'joy-pain-toggle-pain', onChange: function(){toggleJoyPain('pain');}, checked: false">
+  					PAIN
+  					</button>
+				  </div>
+				</div>
+
+        <div id='draw-tools-div' data-dojo-type="dijit/layout/ContentPane">
+          <button data-tool-name="FREEHAND_POLYLINE" data-dojo-type="dijit/form/Button">Draw a Line</button>
+          <button data-tool-name="FREEHAND_POLYGON" data-dojo-type="dijit/form/Button">Create a Shape</button>
+          <button data-tool-name="CIRCLE" data-dojo-type="dijit/form/Button">Place a Circle</button>
+        </div>
+
+        <button id="delete-sketch-button" style="visibility:hidden" data-dojo-type="dijit/form/Button"
+        data-dojo-props="onClick:function(){deleteGraphic();}">
+          <span class="fa fa-trash map-icon"></span>
+        </button>
+      </div>
+    </div>
+
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="../vex-2.3.3/js/vex.combined.min.js"></script>
+    <script>vex.defaultOptions.className = 'vex-theme-flat-attack';</script>
+    <script>
+        var dojoConfig = {
+            parseOnLoad:false,
+            packages: [{
+              "name": "customInfowindow",
+              "location": location.pathname.replace(/\/[^/]+$/, "") + "customInfowindow"
+          }]
+        };
+    </script>
+    <script src="//js.arcgis.com/3.12compact/"></script>
+  	<script type="text/javascript" src="script.js"></script>
+     <!--U Libraries Google Analytics -->
+    <script type="text/javascript">
+      <!--//--><![CDATA[//><!--
+      var _gaq = _gaq || [];_gaq.push(["_setAccount", "UA-20973358-1"]);_gaq.push(["_gat._anonymizeIp"]);_gaq.push(['_setCampaignCookieTimeout', 1209600000]);_gaq.push(["_trackPageview"]);(function() {var ga = document.createElement("script");ga.type = "text/javascript";ga.async = true;ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(ga, s);})();
+      //--><!]]>
+    </script> 
+  </body>
+</html>

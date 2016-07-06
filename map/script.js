@@ -127,31 +127,18 @@ var jp = {},
 		$('#joy-pain-toggle-joy_label').addClass("joy-button-active");
 		$('#joy-pain-toggle-pain_label').addClass("joy-pain-button-inactive");
 
+        //mapbox id and access token for basemap
+        var basemapId = "mapref.0inwhwup";
+        var basemapToken = "pk.eyJ1IjoibWFwcmVmIiwiYSI6ImNpcWI4dDVnZjAwa2Nmcm0xOXFseWpjdjQifQ.jEr7JcX55yvCV738FBJVlQ";
+
         var featureUrl = "http://services.arcgis.com/8df8p0NlLFEShl0r/ArcGIS/rest/services/Joy_Pain_Service/FeatureServer/";
-        var basemapUrl = "http://${subDomain}.tiles.mapbox.com/v4/mmcfarlane83.lm01cdj5/${level}/${col}/${row}.png?" +
-            "access_token=pk.eyJ1IjoianRyZWlua2UiLCJhIjoiaHF3VDZDMCJ9.vcDB3i-OmaAFJvOfpD6M_Q";
+        var basemapUrl = "http://${subDomain}.tiles.mapbox.com/v4/" + basemapId + "/${level}/${col}/${row}.png?" +
+            "access_token=" + basemapToken;
 
         var basemap = new WebTiledLayer(basemapUrl, {subDomains:["a","b","c","d"]});
 
         var infoWindow = new InfoWindow({domNode: domConstruct.create("div", null, dom.byId("infoWindowStyle"))});
 
-        //infoWindow.startup();
-
-        /*
-        var joy_pain_basemap = new BasemapLayer({
-            subDomains:["a","b","c","d"],
-            templateUrl: basemapUrl,
-            type: "WebTiledLayer",
-            copyright: "&copy;Mapbox"
-        });
-        
-        esriBasemaps.joy_pain = {
-
-          baseMapLayers: [joy_pain_basemap],
-          thumbnailUrl: "http://borchert.github.io/joy-pain/img/thumbnail.jpg",
-          title: "Joy/Pain"     
-        };
-        */
 
         joy_pain_map = new Map("joy-pain-map", {
             //basemap: "joy_pain",
@@ -162,16 +149,6 @@ var jp = {},
             minZoom:12
         });
 
-        
-        
-        /*
-        basemap_toggle = new BasemapToggle({
-            map: joy_pain_map,
-            basemaps: ["hybrid", esriBasemaps.joy_pain],
-            basemap: esriBasemaps.joy_pain
-          }, "BasemapToggle");
-        basemap_toggle.startup();
-        */
 
         var maxExtentParams = {
             "xmin":-10408523.528548198,
@@ -281,7 +258,7 @@ var jp = {},
             var content = infoTemplateContent(graphic);
             var title = infoTemplateTitle(graphic);
             var class_name;
-            title === "Share your story: " ? class_name = "vex-theme-flat-attack dialog-empty" : class_name = "vex-theme-flat-attack dialog-with-story";
+            title === "Would you like to share your story?" ? class_name = "vex-theme-flat-attack dialog-empty" : class_name = "vex-theme-flat-attack dialog-with-story";
             joy_pain_map.infoWindow.setClass(class_name);
             joy_pain_map.infoWindow.setContent(content);
             joy_pain_map.infoWindow.setTitle(title);
@@ -322,7 +299,7 @@ var jp = {},
                 return "Shared on: " + localtimeDate;
             }
             else {
-                return "Share your story: ";
+                return "Would you like to share your story?";
             }
         };
         var featureLayerInfoTemplate = new InfoTemplate(infoTemplateTitle, infoTemplateContent);
@@ -559,64 +536,18 @@ var jp = {},
                     hideDeleteButton();
                     joy_pain_map.infoWindow.hide();
                 }
-                /*
-                queryFeatureOverlap(e).then(
-                    function(feature_ids){
-                        get_features_from_layer_by_id(queried_feature_layer, feature_ids).then(
-                            function(results){
-                                if (results.features.length === 1){
-                                    if (!drawing) {
-                                        activate_edit_toolbar(e.graphic);
-                                    }
-                                    buildInfoWindow(results.features[0]);
-                                    joy_pain_map.infoWindow.show();
-                                    
-                                }
-                                else if (results.features.length > 1){
-                                    feature_picker(results.features);
-                                }
-                            }
-                        );
-                    },
-                    function(){
-                        console.log("error");
-                    }
-                );
-                */
+
             };
-            /*
-            lineLayer.on("click", activateEditing);
-            polygonLayer.on("click", activateEditing);
-            */
+
             joy_pain_map.on("click", activateEditing);
 
             queryFeatureOverlap = function(e){
                 var ext = point_to_extent(joy_pain_map, e.mapPoint, 10);
                 var features = get_features_from_click(ext);
                 return features;
-                /*var executeQuery = function(e){
-
-                    //TODO replace with purely client side version
-                    //from http://blogs.esri.com/esri/arcgis/2010/02/08/find-graphics-under-a-mouse-click-with-the-arcgis-api-for-javascript/
-                    queried_feature_layer = e.graphic.getLayer();
-                    var query = new Query();
-                    query.returnGeometry = true;
-                    query.distance = 5;
-                    query.units = "meters";
-                    query.spatialRelationship = Query.SPATIAL_REL_INTERSECTS;
-                    query.geometry = e.mapPoint;
-                    return queried_feature_layer.queryIds(query, function(results){
-
-                        console.log(results.length + " features live here!");
-                        return results;
-                    });    
-                }
-                return executeQuery(e);*/
             }
 
             
-     
-          
 
             joy_pain_map.on("extent-change", function(e){
 
@@ -637,9 +568,7 @@ var jp = {},
             });
 
 
-
             joy_toolbar.on("activate", function(e){
-                console.log("joy: draw starting");
                 drawing = true;
                 storyFeature = null;
                 edit_toolbar.deactivate();
@@ -650,7 +579,6 @@ var jp = {},
             });
 
             pain_toolbar.on("activate", function(e){
-                console.log("pain: draw starting");
                 drawing = true;
                 storyFeature = null;
                 edit_toolbar.deactivate();
@@ -661,12 +589,10 @@ var jp = {},
             });
 
             joy_toolbar.on("draw-end", function(e){
-                console.log("joy: done drawing");
                 drawing = false;
                 addToMap(e,"joy");
             });
             pain_toolbar.on("draw-end", function(e){
-                console.log("pain: done drawing");
                 drawing = false;
                 addToMap(e,"pain");
             });
@@ -731,7 +657,7 @@ var jp = {},
 
         storyFeature = graphic;
         buildInfoWindow(graphic);
-        joy_pain_map.infoWindow.show();
+        window.setTimeout(function(){joy_pain_map.infoWindow.show()}, 900);
 
     }
 
